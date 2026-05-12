@@ -445,66 +445,89 @@ function renderRecent(){
 
 function renderPodio(){
   var mt=getTeamMemberTotals();
-  // Totales reales por equipo
-  var teamReales={};
-  TEAMS.forEach(function(t){
-    teamReales[t.id]=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-  });
-  // Ordenar por % de meta acumulada alcanzada
-  var sorted=TEAMS.slice().sort(function(a,b){
-    var pa=teamMetaAcum(a)>0?teamReales[a.id]/teamMetaAcum(a):0;
-    var pb=teamMetaAcum(b)>0?teamReales[b.id]/teamMetaAcum(b):0;
-    return pb-pa;
-  });
-  var mc=["pm1","pm2","pm3"],em=["🥇","🥈","🥉"];
-  document.getElementById("podioMain").innerHTML=sorted.map(function(t,i){
-    var real=teamReales[t.id]||0;
-    var acum=teamMetaAcum(t);
-    var pct=acum>0?Math.min((real/acum)*100,100):0;
-    var metaHoy=teamMetaHoy(t);
+  var salesArr=getSales();
+
+  // Para cada equipo: real total, meta acumulada, real hoy, meta hoy
+  var data=TEAMS.map(function(t){
+    var realTotal=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
+    var metaAcumTeam=teamMetaAcum(t);
+    var metaHoyTeam=teamMetaHoy(t);
     var realHoy=t.members.reduce(function(s,m){
-      return s+getSales().filter(function(s2){return s2.a===m.nombre&&s2.d===today;}).reduce(function(ss,s2){return ss+s2.v;},0);
+      return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
+               .reduce(function(ss,x){return ss+x.v;},0);
     },0);
+    var pctTotal=metaAcumTeam>0?Math.min((realTotal/metaAcumTeam)*100,100):0;
+    var pctHoy=metaHoyTeam>0?Math.min((realHoy/metaHoyTeam)*100,100):0;
+    return {t:t,realTotal:realTotal,metaAcumTeam:metaAcumTeam,
+            metaHoyTeam:metaHoyTeam,realHoy:realHoy,
+            pctTotal:pctTotal,pctHoy:pctHoy};
+  });
+
+  // Ordenar por % general
+  data.sort(function(a,b){return b.pctTotal-a.pctTotal;});
+
+  var mc=["pm1","pm2","pm3"],em=["🥇","🥈","🥉"];
+  document.getElementById("podioMain").innerHTML=data.map(function(d,i){
+    var t=d.t;
     var cls=i<3?("pod-item p"+(i+1)):"pod-item";
-    var medal=i<3?('<div class="pod-medal '+mc[i]+'">'+em[i]+'</div>'):'<div class="pod-medal" style="background:rgba(255,255,255,.08);font-size:12px;color:var(--mut)">'+(i+1)+'</div>';
+    var medal=i<3
+      ?'<div class="pod-medal '+mc[i]+'">'+em[i]+'</div>'
+      :'<div class="pod-medal" style="background:rgba(255,255,255,.08);font-size:12px;color:var(--mut)">'+(i+1)+'</div>';
+
+    var colorH=d.pctHoy>=100?"#6EE7B7":d.pctHoy>=70?"#FCD34D":"#FCA5A5";
+    var colorT=d.pctTotal>=100?"#6EE7B7":d.pctTotal>=70?"#FCD34D":"#FCA5A5";
+
     return '<div class="'+cls+'" style="animation-delay:'+(i*.08)+'s">'
-      +medal+'<div style="flex:1">'
-      +'<div class="pod-name" style="color:'+t.color+'">'+t.nombre+'</div>'
-      +'<div class="pod-bar-w"><div class="pod-bar" style="width:'+pct+'%;background:'+t.color+'"></div></div>'
-      +'<div style="font-size:10px;color:var(--mut);margin-top:2px">'
-      +'Hoy: <b style="color:'+(realHoy>=metaHoy?"#6EE7B7":"#FCD34D")+'">'+realHoy.toFixed(1)+'</b>/'+metaHoy.toFixed(1)
-      +' &nbsp;·&nbsp; Acum: <b style="color:#6EE7B7">'+real.toFixed(1)+'</b>/'+acum.toFixed(1)
-      +' &nbsp;·&nbsp; <b style="color:'+(pct>=100?"#6EE7B7":pct>=70?"#FCD34D":"#FCA5A5")+'">'+pct.toFixed(0)+'%</b>'
-      +'</div></div>'
-      +'<div style="text-align:right"><div class="pod-score">'+pct.toFixed(0)+'%</div></div></div>';
+      +medal
+      +'<div style="flex:1">'
+        +'<div class="pod-name" style="color:'+t.color+'">'+t.nombre+'</div>'
+        // Barra diaria
+        +'<div style="font-size:9px;color:var(--mut);margin:5px 0 2px;text-transform:uppercase;letter-spacing:.4px">📅 Hoy</div>'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+          +'<div style="flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
+            +'<div style="width:'+d.pctHoy+'%;height:100%;background:'+colorH+';border-radius:99px;transition:width .8s ease"></div>'
+          +'</div>'
+          +'<span style="font-size:11px;font-weight:700;color:'+colorH+';white-space:nowrap">'+d.realHoy.toFixed(1)+' / '+d.metaHoyTeam.toFixed(1)+'</span>'
+          +'<span style="font-size:10px;color:'+colorH+';font-weight:600">'+d.pctHoy.toFixed(0)+'%</span>'
+        +'</div>'
+        // Barra general
+        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">📊 General acumulado</div>'
+        +'<div style="display:flex;align-items:center;gap:8px">'
+          +'<div style="flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
+            +'<div style="width:'+d.pctTotal+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
+          +'</div>'
+          +'<span style="font-size:11px;font-weight:700;color:var(--txt);white-space:nowrap">'+d.realTotal.toFixed(1)+' / '+d.metaAcumTeam.toFixed(1)+'</span>'
+          +'<span style="font-size:10px;color:'+colorT+';font-weight:600">'+d.pctTotal.toFixed(0)+'%</span>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
   }).join("");
 
   // Marcador diario
-  var salesArr=getSales();
   var h='<table><thead><tr><th class="th-d" style="text-align:left;min-width:120px">Equipo</th>';
-  WD.forEach(function(d){
-    h+='<th class="th-d'+(d===today?' tdc':'')+'" style="min-width:34px"><div>'+d+'</div>'
-      +'<div style="font-size:9px;color:var(--mut)">'+DN[dow(d)]+(SAT.has(d)?' 4h':'')+'</div></th>';
+  WD.forEach(function(day){
+    h+='<th class="th-d'+(day===today?' tdc':'')+'" style="min-width:34px">'
+      +'<div>'+day+'</div><div style="font-size:9px;color:var(--mut)">'+DN[dow(day)]+(SAT.has(day)?' 4h':'')+'</div></th>';
   });
   h+='<th class="th-d">Real</th><th class="th-d">Meta</th><th class="th-d">%</th></tr></thead><tbody>';
-  sorted.forEach(function(t,i){
-    var dm={};WD.forEach(function(d){dm[d]=0;});
+  data.forEach(function(d,i){
+    var dm={};WD.forEach(function(day){dm[day]=0;});
     salesArr.forEach(function(s){
       var info=findMember(s.a);
-      if(info&&info.team.id===t.id&&dm[s.d]!==undefined)dm[s.d]+=s.v;
+      if(info&&info.team.id===d.t.id&&dm[s.d]!==undefined)dm[s.d]+=s.v;
     });
-    var real=teamReales[t.id]||0;
-    var acum=teamMetaAcum(t);
-    var pct=acum>0?((real/acum)*100).toFixed(0):"0";
-    h+='<tr style="background:'+(i%2===0?"rgba(255,255,255,.03)":"rgba(255,255,255,.01)")+'"><td class="td-l" style="font-weight:600;font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:'+t.color+';border-radius:50%;margin-right:5px"></span>'+t.nombre+'</td>';
-    WD.forEach(function(d){
-      var v=dm[d];
-      var mDia=teamMetaHoy(t);
+    var colorT=d.pctTotal>=100?"#6EE7B7":d.pctTotal>=70?"#FCD34D":"#FCA5A5";
+    h+='<tr style="background:'+(i%2===0?"rgba(255,255,255,.03)":"rgba(255,255,255,.01)")
+      +'"><td class="td-l" style="font-weight:600;font-size:10px">'
+      +'<span style="display:inline-block;width:8px;height:8px;background:'+d.t.color+';border-radius:50%;margin-right:5px"></span>'
+      +d.t.nombre+'</td>';
+    WD.forEach(function(day){
+      var v=dm[day];
       h+='<td style="color:'+(v>0?"#6EE7B7":"rgba(255,255,255,.15)")+';font-weight:'+(v>0?"600":"400")+'">'+(v>0?v.toFixed(1):"")+'</td>';
     });
-    h+='<td style="color:#6EE7B7;font-weight:700">'+real.toFixed(1)+'</td>'
-      +'<td style="color:var(--mut)">'+acum.toFixed(1)+'</td>'
-      +'<td style="color:'+(parseInt(pct)>=100?"#6EE7B7":parseInt(pct)>=70?"#FCD34D":"#FCA5A5")+';font-weight:600">'+pct+'%</td></tr>';
+    h+='<td style="color:#6EE7B7;font-weight:700">'+d.realTotal.toFixed(1)+'</td>'
+      +'<td style="color:var(--mut)">'+d.metaAcumTeam.toFixed(1)+'</td>'
+      +'<td style="color:'+colorT+';font-weight:600">'+d.pctTotal.toFixed(0)+'%</td></tr>';
   });
   document.getElementById("marcador").innerHTML=h+'</tbody></table>';
 }
@@ -513,37 +536,72 @@ function renderEquipos(){
   var mt=getTeamMemberTotals();
   var salesArr=getSales();
   document.getElementById("teamGrid").innerHTML=TEAMS.map(function(t){
-    var teamReal=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
+    var teamRealT=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
     var teamMetaA=teamMetaAcum(t);
-    var teamPct=teamMetaA>0?Math.min((teamReal/teamMetaA)*100,100):0;
     var teamMetaH=teamMetaHoy(t);
     var teamRealH=t.members.reduce(function(s,m){
-      return s+salesArr.filter(function(s2){return s2.a===m.nombre&&s2.d===today;}).reduce(function(ss,s2){return ss+s2.v;},0);
+      return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
+               .reduce(function(ss,x){return ss+x.v;},0);
     },0);
+    var teamPctT=teamMetaA>0?Math.min((teamRealT/teamMetaA)*100,100):0;
+    var teamPctH=teamMetaH>0?Math.min((teamRealH/teamMetaH)*100,100):0;
+    var colorH=teamPctH>=100?"#6EE7B7":teamPctH>=70?"#FCD34D":"#FCA5A5";
+    var colorT=teamPctT>=100?"#6EE7B7":teamPctT>=70?"#FCD34D":"#FCA5A5";
+
     var mbars=t.members.map(function(m,mi){
-      var real=mt[m.nombre]||0;
-      var realH=salesArr.filter(function(s2){return s2.a===m.nombre&&s2.d===today;}).reduce(function(ss,s2){return ss+s2.v;},0);
+      var realT=mt[m.nombre]||0;
+      var realH=salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
+                 .reduce(function(ss,x){return ss+x.v;},0);
       var mHoy=metaForDay(m.metaDia,today);
       var mAcum=metaAcum(m.metaDia);
-      var pct=mAcum>0?Math.min((real/mAcum)*100,100):0;
+      var pctH=mHoy>0?Math.min((realH/mHoy)*100,100):0;
+      var pctT=mAcum>0?Math.min((realT/mAcum)*100,100):0;
       var isPad=mi===0;
+      var cH=pctH>=100?"#6EE7B7":pctH>=70?"#FCD34D":"#FCA5A5";
+      var cT=pctT>=100?"#6EE7B7":pctT>=70?"#FCD34D":"#FCA5A5";
       return '<div class="mbr">'
         +'<div class="mbr-nm" style="color:'+(isPad?t.color:"var(--txt)")+';font-weight:'+(isPad?"700":"600")+'">'+(isPad?"👑 ":"")+m.nombre+'</div>'
-        +'<div class="mbr-bar-w"><div class="mbr-bar" style="width:'+pct+'%;background:'+(isPad?t.color:"linear-gradient(90deg,#0D9488,#6EE7B7)")+'"></div>'
-        +(pct>15?'<span class="mbr-pct">'+Math.round(pct)+'%</span>':'')+'</div>'
-        +'<div class="mbr-num" style="font-size:9px;line-height:1.4;color:var(--mut);text-align:right">'
-        +(m.metaDia>0?'<span style="color:#6EE7B7">'+realH.toFixed(1)+'</span>/'+mHoy.toFixed(1)+'<br>'+real.toFixed(1)+'/'+mAcum.toFixed(1):'—')
-        +'</div></div>';
-    }).join("");
-    return '<div class="team-card"><div class="team-hdr">'
-      +'<div class="team-nm" style="color:'+t.color+'">'+t.nombre+'</div>'
-      +'<div class="team-tot">'+teamPct.toFixed(0)+'%</div></div>'
-      +mbars
-      +'<div class="team-prog-w"><div class="team-prog" style="width:'+teamPct+'%;background:'+t.color+'"></div></div>'
-      +'<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--mut)">'
-      +'<span>Hoy: <b style="color:'+(teamRealH>=teamMetaH?"#6EE7B7":"#FCD34D")+'">'+teamRealH.toFixed(1)+'</b>/'+teamMetaH.toFixed(1)+'</span>'
-      +'<span>Acum: <b style="color:#6EE7B7">'+teamReal.toFixed(1)+'</b>/'+teamMetaA.toFixed(1)+'</span></div>'
+        +'<div style="flex:1;padding:0 4px">'
+          // Hoy
+          +(m.metaDia>0?
+            '<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">'
+              +'<span style="font-size:8px;color:var(--mut);width:28px">HOY</span>'
+              +'<div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
+                +'<div style="width:'+pctH+'%;height:100%;background:'+cH+';border-radius:99px"></div>'
+              +'</div>'
+              +'<span style="font-size:9px;color:'+cH+';width:55px;text-align:right;font-weight:600">'+realH.toFixed(1)+'/'+mHoy.toFixed(1)+'</span>'
+            +'</div>'
+            // General
+            +'<div style="display:flex;align-items:center;gap:4px">'
+              +'<span style="font-size:8px;color:var(--mut);width:28px">TOTAL</span>'
+              +'<div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
+                +'<div style="width:'+pctT+'%;height:100%;background:'+(isPad?t.color:"#6366F1")+';border-radius:99px"></div>'
+              +'</div>'
+              +'<span style="font-size:9px;color:'+cT+';width:55px;text-align:right;font-weight:600">'+realT.toFixed(1)+'/'+mAcum.toFixed(1)+'</span>'
+            +'</div>'
+          :"<span style=\"font-size:10px;color:var(--mut)\">Padrino — sin meta individual</span>")
+        +'</div>'
       +'</div>';
+    }).join("");
+
+    return '<div class="team-card">'
+      +'<div class="team-hdr"><div class="team-nm" style="color:'+t.color+'">'+t.nombre+'</div>'
+      +'<div style="text-align:right;font-size:10px">'
+        +'<div style="color:'+colorH+';font-weight:600">HOY '+teamRealH.toFixed(1)+'/'+teamMetaH.toFixed(1)+'</div>'
+        +'<div style="color:'+colorT+';font-weight:600">GEN '+teamPctT.toFixed(0)+'%</div>'
+      +'</div></div>'
+      +mbars
+      +'<div style="margin-top:8px">'
+        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px">📅 HOY: '+teamPctH.toFixed(0)+'%</div>'
+        +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:4px">'
+          +'<div style="width:'+teamPctH+'%;height:100%;background:'+colorH+';border-radius:99px;transition:width .8s ease"></div>'
+        +'</div>'
+        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px">📊 GENERAL: '+teamPctT.toFixed(0)+'%</div>'
+        +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
+          +'<div style="width:'+teamPctT+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
   }).join("");
 }
 
