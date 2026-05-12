@@ -388,13 +388,35 @@ function renderRecent(){
   var sales=getSales().sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
   document.getElementById("regCount").textContent=sales.length;
   var el=document.getElementById("recentRegs");
-  if(!sales.length){el.innerHTML='<div style="color:var(--mut);font-size:12px">Sin registros aun</div>';return;}
-  el.innerHTML=sales.slice(0,8).map(function(s){
+  el.innerHTML="";
+  if(!sales.length){
+    el.innerHTML='<div style="color:var(--mut);font-size:12px">Sin registros aun</div>';
+    return;
+  }
+  sales.slice(0,8).forEach(function(s){
     var info=findMember(s.a);
     var tColor=info?info.team.color:"#0D9488";
     var tNombre=info?info.team.nombre:"";
-    return'<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--brd);font-size:11px;gap:6px"><div><b style="color:var(--txt)">'+s.a+'</b><span style="color:'+tColor+';font-size:10px"> · '+tNombre+'</span><br><span style="color:#6EE7B7;font-weight:600">'+s.v+' ventas</span> <span style="color:var(--mut)">May '+s.d+' · '+ts2t(s.ts)+'</span></div><button onclick="delReg(\''+s._id+'\')" style="border:none;background:none;color:var(--dan);cursor:pointer;font-size:15px;padding:0;line-height:1">x</button></div>';
-  }).join("");
+    var wrap=document.createElement("div");
+    wrap.style.cssText="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--brd);font-size:11px;gap:6px";
+    var left=document.createElement("div");
+    left.innerHTML='<b style="color:var(--txt)">'+s.a+'</b>'
+      +'<span style="color:'+tColor+';font-size:10px"> · '+tNombre+'</span><br>'
+      +'<span style="color:#6EE7B7;font-weight:600">'+s.v+' ventas</span>'
+      +' <span style="color:var(--mut)">May '+s.d+' · '+ts2t(s.ts)+'</span>';
+    var btn=document.createElement("button");
+    btn.textContent="x";
+    btn.style.cssText="border:none;background:none;color:#EF4444;cursor:pointer;font-size:16px;padding:0;line-height:1;flex-shrink:0";
+    btn.title="Eliminar registro";
+    (function(id){
+      btn.addEventListener("click",function(){
+        if(confirm("Eliminar este registro?")) dbRef.child("sales/"+id).remove();
+      });
+    })(s._id);
+    wrap.appendChild(left);
+    wrap.appendChild(btn);
+    el.appendChild(wrap);
+  });
 }
 
 function renderPodio(){
@@ -465,12 +487,23 @@ function renderTabla(){
   if(fa)sales=sales.filter(function(s){return s.a===fa;});
   if(fd)sales=sales.filter(function(s){return s.d==fd;});
   var bg0="rgba(255,255,255,.04)",bg1="rgba(255,255,255,.02)";
-  document.getElementById("tablaBody").innerHTML=sales.map(function(s,i){
+  var tbody=document.getElementById("tablaBody");
+  tbody.innerHTML="";
+  sales.forEach(function(s,i){
     var info=findMember(s.a);
     var tc=info?info.team.color:"#0D9488";
     var tn=info?info.team.nombre:"";
-    return'<tr style="background:'+(i%2===0?bg0:bg1)+'"><td>'+s.d+'</td><td class="td-l" style="color:var(--txt)">'+s.a+'</td><td class="td-l" style="color:'+tc+';font-size:10px">'+tn+'</td><td style="color:#6EE7B7;font-weight:700">'+s.v+'</td><td style="color:var(--mut)">'+ts2t(s.ts)+'</td><td><button onclick="delReg(\''+s._id+'\')" style="border:none;background:none;color:var(--dan);cursor:pointer;font-size:14px;padding:0">x</button></td></tr>';
-  }).join("");
+    var tr=document.createElement("tr");
+    tr.style.background=i%2===0?bg0:bg1;
+    tr.innerHTML='<td>'+s.d+'</td><td class="td-l" style="color:var(--txt)">'+s.a+'</td><td class="td-l" style="color:'+tc+';font-size:10px">'+tn+'</td><td style="color:#6EE7B7;font-weight:700">'+s.v+'</td><td style="color:var(--mut)">'+ts2t(s.ts)+'</td><td></td>';
+    var btn=document.createElement("button");
+    btn.textContent="×";
+    btn.style.cssText="border:none;background:none;color:var(--dan);cursor:pointer;font-size:14px;padding:0";
+    btn.title="Eliminar";
+    btn.addEventListener("click",function(){if(confirm("Eliminar este registro?"))fbRemove("sales/"+s._id);});
+    tr.cells[tr.cells.length-1].appendChild(btn);
+    tbody.appendChild(tr);
+  });
   document.getElementById("tablaCount").textContent=sales.length+" registro(s)";
 }
 function clearTF(){document.getElementById("tfAdv").value="";document.getElementById("tfDay").value="";renderTabla();}
