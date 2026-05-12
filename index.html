@@ -242,25 +242,19 @@ function dow(d){return(5+d-1)%7;}
 var today=(function(){var n=new Date();return n.getFullYear()===2026&&n.getMonth()===4?n.getDate():12;})();
 
 
-// Meta de un miembro para un dia especifico (mitad en sabado)
+// Meta de un miembro para un dia especifico (sabado = mitad)
 function metaForDay(metaDia, day){
   return SAT.has(day) ? metaDia * 0.5 : metaDia;
 }
-// Meta acumulada de un miembro hasta un dia dado (inclusive)
-function metaAcum(metaDia){
-  return WD.filter(function(d){return d<=today;}).reduce(function(s,d){
-    return s + metaForDay(metaDia, d);
-  }, 0);
-}
-// Meta total del mes completo para un miembro
+// META GENERAL del mes completo (12 al 30) — FIJA, no cambia con la fecha
 function metaMes(metaDia){
   return WD.reduce(function(s,d){return s+metaForDay(metaDia,d);},0);
 }
-// Meta acumulada del equipo hasta hoy
-function teamMetaAcum(team){
-  return team.members.reduce(function(s,m){return s+metaAcum(m.metaDia);},0);
+// Meta general del equipo (suma de todos los miembros, todos los dias)
+function teamMetaMes(team){
+  return team.members.reduce(function(s,m){return s+metaMes(m.metaDia);},0);
 }
-// Meta del equipo para el dia de hoy
+// Meta del equipo para el dia de HOY unicamente
 function teamMetaHoy(team){
   return team.members.reduce(function(s,m){return s+metaForDay(m.metaDia,today);},0);
 }
@@ -450,7 +444,7 @@ function renderPodio(){
   // Para cada equipo: real total, meta acumulada, real hoy, meta hoy
   var data=TEAMS.map(function(t){
     var realTotal=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-    var metaAcumTeam=teamMetaAcum(t);
+    var metaAcumTeam=teamMetaMes(t);
     var metaHoyTeam=teamMetaHoy(t);
     var realHoy=t.members.reduce(function(s,m){
       return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
@@ -537,7 +531,7 @@ function renderEquipos(){
   var salesArr=getSales();
   document.getElementById("teamGrid").innerHTML=TEAMS.map(function(t){
     var teamRealT=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-    var teamMetaA=teamMetaAcum(t);
+    var teamMetaA=teamMetaMes(t);
     var teamMetaH=teamMetaHoy(t);
     var teamRealH=t.members.reduce(function(s,m){
       return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
@@ -553,7 +547,7 @@ function renderEquipos(){
       var realH=salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
                  .reduce(function(ss,x){return ss+x.v;},0);
       var mHoy=metaForDay(m.metaDia,today);
-      var mAcum=metaAcum(m.metaDia);
+      var mAcum=metaMes(m.metaDia);
       var pctH=mHoy>0?Math.min((realH/mHoy)*100,100):0;
       var pctT=mAcum>0?Math.min((realT/mAcum)*100,100):0;
       var isPad=mi===0;
