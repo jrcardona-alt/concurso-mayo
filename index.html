@@ -306,7 +306,7 @@ function checkRanks(){
 // ── UTILS ─────────────────────────────────────────────────────────
 function fCOP(n){return "$"+Math.round(n).toLocaleString("es-CO");}
 function ts2t(ts){if(!ts)return"";var d=new Date(ts);return d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");}
-function getSales(){return db.sales?Object.values(db.sales):[];}
+function getSales(){if(!db.sales)return[];return Object.keys(db.sales).map(function(k){var s=Object.assign({},db.sales[k]);s._id=k;return s;});}
 function showToast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on");},5000);}
 function showMsg(id,txt,ok){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div class="msg '+(ok?"mok":"merr")+'">'+txt+'</div>';setTimeout(function(){if(el)el.innerHTML="";},3000);}
 
