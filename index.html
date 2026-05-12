@@ -280,7 +280,7 @@ TEAMS.forEach(function(t){
 var ALL_MEMBERS = [];
 TEAMS.forEach(function(t){
   t.members.forEach(function(m){
-    ALL_MEMBERS.push({name:m.name, meta:m.meta, teamId:t.id, teamName:t.name, teamColor:t.color});
+    ALL_MEMBERS.push({name:m.n, meta:m.meta, teamId:t.id, teamName:t.name, teamColor:t.color});
   });
 });
 
@@ -507,11 +507,22 @@ function renderTabla(){
 
 // ── SELECTORS ─────────────────────────────────────────────────────
 function initSelectors(){
-  var advH='<option value="">-- Asesor --</option>'+ALL_MEMBERS.map(function(m){return '<option value="'+m.name+'">'+m.name+' ('+m.teamName.replace("Equipo ","")+')';}).join("");
+  var advH='<option value="">-- Asesor --</option>';
+  TEAMS.forEach(function(t){
+    advH+='<option disabled style="color:#6EE7B7;background:#1E293B">── '+t.name+' ──</option>';
+    t.members.forEach(function(m,mi){
+      advH+='<option value="'+m.n+'">'+(mi===0?"👑 ":"")+m.n+'</option>';
+    });
+  });
   var dayH='<option value="">-- Día --</option>'+WD.map(function(d){return '<option value="'+d+'">'+(d<10?"0"+d:d)+' May — '+DN[dow(d)]+(SAT.has(d)?" 4h":"")+(d===today?" HOY":"")+'</option>';}).join("");
   document.getElementById("rAdv").innerHTML=advH;
   document.getElementById("rDay").innerHTML=dayH;
-  document.getElementById("tfAdv").innerHTML='<option value="">Todos</option>'+ALL_MEMBERS.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join("");
+  var tfH='<option value="">Todos</option>';
+  TEAMS.forEach(function(t){
+    tfH+='<option disabled style="color:#6EE7B7;background:#1E293B">── '+t.name+' ──</option>';
+    t.members.forEach(function(m){tfH+='<option value="'+m.n+'">'+m.n+'</option>';});
+  });
+  document.getElementById("tfAdv").innerHTML=tfH;
   document.getElementById("tfDay").innerHTML='<option value="">Todos los días</option>'+WD.map(function(d){return '<option value="'+d+'">'+(d<10?"0"+d:d)+' May</option>';}).join("");
 }
 
