@@ -11,26 +11,56 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   background-image:radial-gradient(ellipse at 20% 20%,rgba(99,102,241,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(13,148,136,.15) 0%,transparent 50%);background-attachment:fixed;}
 
+/* ── INTRO ANIMATION ─────────────────────────────── */
+#intro{position:fixed;inset:0;z-index:10000;background:#0F172A;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+#intro.hide{animation:introOut .6s ease forwards}
+@keyframes introOut{to{opacity:0;visibility:hidden}}
+.intro-wom{font-size:72px;font-weight:900;letter-spacing:8px;color:#fff;opacity:0;animation:introWom .8s ease .3s forwards}
+@keyframes introWom{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.intro-col{font-size:18px;font-weight:400;letter-spacing:6px;color:rgba(255,255,255,.6);opacity:0;animation:introCol .6s ease 1s forwards;text-transform:uppercase}
+@keyframes introCol{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.intro-bar{width:0;height:3px;background:linear-gradient(90deg,#0D9488,#6366F1,#EC4899);border-radius:99px;margin-top:20px;animation:introBar 1.5s ease 1.2s forwards}
+@keyframes introBar{from{width:0}to{width:180px}}
+
 /* ── PROFILE SCREEN ──────────────────────────────── */
-#profileScreen{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0F172A 0%,#1E1B4B 40%,#0F2E2B 100%);overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:32px 16px;}
+#profileScreen{position:fixed;inset:0;z-index:9998;background:#0F172A;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 #profileScreen.hide{display:none}
-.ps-logo{font-size:52px;margin-bottom:10px;animation:psB 1.2s ease-in-out infinite alternate}
-@keyframes psB{from{transform:translateY(0)}to{transform:translateY(-8px)}}
-.ps-title{font-size:24px;font-weight:700;background:linear-gradient(135deg,#6EE7B7,#818CF8,#6EE7B7);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:psG 3s linear infinite;margin-bottom:4px;text-align:center;}
-@keyframes psG{0%{background-position:0%}100%{background-position:200%}}
-.ps-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;text-align:center}
-.ps-section{width:100%;max-width:520px;margin-bottom:16px}
-.ps-section-title{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:2px}
-.ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
-.ps-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;}
-.ps-btn:hover{background:rgba(255,255,255,.12);transform:translateY(-2px);border-color:rgba(255,255,255,.25)}
-.ps-btn .pb-icon{font-size:22px;margin-bottom:4px}
-.ps-btn .pb-name{font-size:12px;font-weight:600;color:var(--txt)}
-.ps-btn .pb-role{font-size:10px;color:var(--mut)}
-.ps-btn.pad{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
-.ps-btn.pad:hover{border-color:rgba(245,158,11,.7);background:rgba(245,158,11,.15)}
-.ps-btn.jefa{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1);max-width:520px;width:100%}
-.ps-btn.jefa:hover{border-color:rgba(139,92,246,.8);background:rgba(139,92,246,.2)}
+.ps-title{font-size:18px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:24px;text-align:center;letter-spacing:1px}
+.ps-teams{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;max-width:900px;margin-bottom:24px}
+.ps-team-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ps-team-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;opacity:.7}
+.ps-avatar{width:80px;height:80px;border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all .2s;border:3px solid transparent;position:relative;font-family:inherit;background:rgba(255,255,255,.08);}
+.ps-avatar:hover{transform:scale(1.1);border-color:rgba(255,255,255,.8);filter:brightness(1.15)}
+.ps-avatar:hover .ps-av-name{opacity:1}
+.ps-av-icon{font-size:28px}
+.ps-av-name{font-size:11px;font-weight:600;color:#fff;text-align:center;line-height:1.2}
+.ps-av-role{font-size:9px;color:rgba(255,255,255,.5);text-align:center}
+.ps-avatar.pad{border-color:rgba(245,158,11,.5)}
+.ps-jefa-row{margin-top:4px}
+.ps-jefa-btn{background:rgba(139,92,246,.15);border:2px solid rgba(139,92,246,.4);border-radius:10px;padding:10px 28px;cursor:pointer;font-family:inherit;color:#C4B5FD;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all .2s;}
+.ps-jefa-btn:hover{background:rgba(139,92,246,.25);border-color:rgba(139,92,246,.8);transform:scale(1.03)}
+
+/* ── PIN MODAL ───────────────────────────────────── */
+#pinModal{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;}
+#pinModal.show{display:flex}
+.pin-box{background:#1E293B;border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:28px 32px;text-align:center;min-width:280px;animation:pinIn .3s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pinIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.pin-avatar{font-size:36px;margin-bottom:6px}
+.pin-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+.pin-sub{font-size:11px;color:var(--mut);margin-bottom:16px}
+.pin-dots{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .2s}
+.pin-dot.filled{background:#6EE7B7;border-color:#6EE7B7}
+.pin-dot.error{background:#EF4444;border-color:#EF4444;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.pin-key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px;font-size:18px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;transition:all .15s;}
+.pin-key:hover{background:rgba(255,255,255,.16);transform:scale(1.05)}
+.pin-key:active{transform:scale(.95)}
+.pin-key.del{font-size:14px;color:var(--mut)}
+.pin-actions{display:flex;gap:8px;justify-content:center;margin-top:4px}
+.pin-link{background:none;border:none;color:var(--mut);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline}
+.pin-err{font-size:11px;color:#FCA5A5;min-height:16px;margin-bottom:4px}
 
 /* ── SALE OVERLAY ────────────────────────────────── */
 #saleOverlay{position:fixed;inset:0;z-index:8999;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.85);backdrop-filter:blur(8px)}
@@ -121,12 +151,36 @@ td.td-l{text-align:left;padding-left:8px}
 </head>
 <body>
 
+<!-- INTRO ANIMATION -->
+<div id="intro">
+  <div class="intro-wom">WOM</div>
+  <div class="intro-col">Colombia</div>
+  <div class="intro-bar"></div>
+</div>
+
 <!-- PROFILE SELECTION SCREEN -->
 <div id="profileScreen">
-  <div class="ps-logo">🏆</div>
-  <div class="ps-title">Concurso Mayo 2026</div>
-  <div class="ps-sub">WOM Colombia · Selecciona tu perfil para continuar</div>
+  <div class="ps-title">¿Quién eres?</div>
   <div id="psContent"></div>
+</div>
+
+<!-- PIN MODAL -->
+<div id="pinModal">
+  <div class="pin-box">
+    <div class="pin-avatar" id="pinAvatar"></div>
+    <div class="pin-name" id="pinName"></div>
+    <div class="pin-sub" id="pinSub">Ingresa tu PIN de 4 dígitos</div>
+    <div class="pin-err" id="pinErr"></div>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="pin-keypad" id="pinKeypad"></div>
+    <div class="pin-actions">
+      <button class="pin-link" onclick="closePinModal()">Cancelar</button>
+      <button class="pin-link" id="pinSetLink" onclick="switchToSetPin()">Cambiar PIN</button>
+    </div>
+  </div>
 </div>
 
 <!-- MAIN APP -->
@@ -522,32 +576,133 @@ function renderHourGrid(){
 }
 
 // ── PROFILE SCREEN ────────────────────────────────────────────────
+// ── PIN SYSTEM ────────────────────────────────────────────────────
+var PIN_KEY="concurso_pins_v2";
+var pinBuffer="";
+var pinTarget=null;
+var pinStep="enter";
+var pinNew1="";
+
+function getPins(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||"{}");}catch(e){return{};}}
+function savePin(nombre,pin){var p=getPins();p[nombre]=pin;localStorage.setItem(PIN_KEY,JSON.stringify(p));}
+function getPin(nombre){return getPins()[nombre]||null;}
+
 function buildProfileScreen(){
   var el=document.getElementById("psContent");
-  var html="";
+  // Build keypad once
+  var kp=document.getElementById("pinKeypad");
+  if(kp){
+    kp.innerHTML=[1,2,3,4,5,6,7,8,9,"","0","del"].map(function(k){
+      if(k==="")return"<div></div>";
+      return'<button class="pin-key'+(k==="del"?" del":"")+'" onclick="pinKey(\''+(k==="del"?"DEL":k)+'\')">'+(k==="del"?"&#9003;":k)+'</button>';
+    }).join("");
+  }
+  // Team columns
+  var h='<div class="ps-teams">';
   TEAMS.forEach(function(t){
-    html+='<div class="ps-section">'
-      +'<div class="ps-section-title" style="color:'+t.color+'">'+t.nombre+'</div>'
-      +'<div class="ps-grid">';
+    h+='<div class="ps-team-col">'
+      +'<div class="ps-team-label" style="color:'+t.color+'">'+t.nombre.replace("Equipo ","")+'</div>';
     t.members.forEach(function(m){
-      html+='<button class="ps-btn'+(m.esPad?" pad":"")+'" onclick="selectProfile(\''+m.nombre+'\',\''+t.id+'\')">'
-        +'<div class="pb-icon">'+(m.esPad?"👑":"👤")+'</div>'
-        +'<div class="pb-name">'+m.nombre+'</div>'
-        +'<div class="pb-role">'+(m.esPad?"Padrino":"Ahijado")+(m.metaDia>0?" · meta "+m.metaDia:"")+'</div>'
+      var hasPin=!!getPin(m.nombre);
+      h+='<button class="ps-avatar'+(m.esPad?" pad":"")+'" '
+        +'style="background:'+t.color+'22;border-color:'+(m.esPad?t.color+"99":"transparent")+'" '
+        +'onclick="onAvatarClick(\''+m.nombre+'\',\''+t.id+'\')">'
+        +'<span class="ps-av-icon">'+(m.esPad?"👑":"👤")+'</span>'
+        +'<span class="ps-av-name">'+m.nombre+'</span>'
+        +'<span class="ps-av-role">'+(hasPin?"🔒":"🔓")+(m.metaDia>0?" "+m.metaDia:"")+'</span>'
       +'</button>';
     });
-    html+='</div></div>';
+    h+='</div>';
   });
-  // Supervisor
-  html+='<div class="ps-section" style="max-width:520px;width:100%">'
-    +'<div class="ps-section-title">Supervisión</div>'
-    +'<button class="ps-btn jefa" onclick="selectProfile(\'Jefa Yeimi\',null)">'
-      +'<div class="pb-icon">👁️</div>'
-      +'<div class="pb-name">Jefa Yeimi</div>'
-      +'<div class="pb-role">Solo visualización — ver todos los equipos</div>'
+  h+='</div>';
+  h+='<div class="ps-jefa-row">'
+    +'<button class="ps-jefa-btn" onclick="selectProfile(\'Jefa Yeimi\',null)">'
+    +'<span>👁️</span> Jefa Yeimi — Solo visualización'
     +'</button></div>';
-  el.innerHTML=html;
+  el.innerHTML=h;
 }
+
+function onAvatarClick(nombre,teamId){
+  pinTarget={nombre:nombre,teamId:teamId};
+  pinBuffer="";pinNew1="";
+  var pin=getPin(nombre);
+  if(!pin){
+    pinStep="set1";
+    openPinModal(nombre,"🔓","Crea tu PIN de 4 digitos");
+  } else {
+    pinStep="enter";
+    openPinModal(nombre,"🔒","Ingresa tu PIN");
+  }
+}
+
+function openPinModal(nombre,icon,sub){
+  pinBuffer="";updatePinDots();
+  document.getElementById("pinAvatar").textContent=icon;
+  document.getElementById("pinName").textContent=nombre;
+  document.getElementById("pinSub").textContent=sub;
+  document.getElementById("pinErr").textContent="";
+  var m=ALL_MEMBERS.find(function(x){return x.nombre===nombre;});
+  if(m)document.getElementById("pinName").style.color=m.teamColor||"#fff";
+  document.getElementById("pinSetLink").style.display=pinStep==="enter"?"inline":"none";
+  document.getElementById("pinModal").classList.add("show");
+}
+
+function closePinModal(){
+  document.getElementById("pinModal").classList.remove("show");
+  pinTarget=null;pinBuffer="";pinStep="enter";pinNew1="";
+}
+
+function switchToSetPin(){
+  pinStep="set1";pinBuffer="";pinNew1="";
+  document.getElementById("pinSub").textContent="Ingresa tu nuevo PIN (4 digitos)";
+  document.getElementById("pinErr").textContent="";
+  document.getElementById("pinSetLink").style.display="none";
+  updatePinDots();
+}
+
+function pinKey(k){
+  if(k==="DEL"){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=k;updatePinDots();
+  if(pinBuffer.length===4)setTimeout(processPinComplete,120);
+}
+
+function updatePinDots(){
+  var dots=document.querySelectorAll(".pin-dot");
+  dots.forEach(function(d,i){d.className="pin-dot"+(i<pinBuffer.length?" filled":"");});
+}
+
+function errorDots(){
+  document.querySelectorAll(".pin-dot").forEach(function(d){d.className="pin-dot error";});
+  setTimeout(function(){pinBuffer="";updatePinDots();},600);
+}
+
+function processPinComplete(){
+  if(pinStep==="enter"){
+    if(pinBuffer===getPin(pinTarget.nombre)){
+      closePinModal();selectProfile(pinTarget.nombre,pinTarget.teamId);
+    } else {
+      document.getElementById("pinErr").textContent="PIN incorrecto";
+      errorDots();
+    }
+  } else if(pinStep==="set1"){
+    pinNew1=pinBuffer;pinBuffer="";updatePinDots();
+    pinStep="set2";
+    document.getElementById("pinSub").textContent="Confirma tu nuevo PIN";
+    document.getElementById("pinErr").textContent="";
+  } else if(pinStep==="set2"){
+    if(pinBuffer===pinNew1){
+      savePin(pinTarget.nombre,pinBuffer);
+      closePinModal();selectProfile(pinTarget.nombre,pinTarget.teamId);
+    } else {
+      document.getElementById("pinErr").textContent="Los PINs no coinciden. Intenta de nuevo.";
+      errorDots();
+      setTimeout(function(){pinStep="set1";pinNew1="";
+        document.getElementById("pinSub").textContent="Ingresa tu nuevo PIN (4 digitos)";},700);
+    }
+  }
+}
+
 
 function selectProfile(nombre,teamId){
   var info=null;
@@ -642,6 +797,11 @@ function init(){
 
   if(currentProfile){applyProfile();}
   if(window.speechSynthesis)window.speechSynthesis.getVoices();
+  // Intro animation
+  setTimeout(function(){
+    var intro=document.getElementById("intro");
+    if(intro){intro.classList.add("hide");setTimeout(function(){intro.remove();},700);}
+  },2500);
 }
 init();
 </script>
