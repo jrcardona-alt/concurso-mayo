@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Concurso Mayo 2026</title>
+<title>Concurso Mayo 2026 — WOM Colombia</title>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
@@ -10,200 +10,205 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   background-image:radial-gradient(ellipse at 20% 20%,rgba(99,102,241,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(13,148,136,.15) 0%,transparent 50%);background-attachment:fixed;}
-#splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0F172A 0%,#1E1B4B 40%,#0F2E2B 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s;}
-#splash.hide{opacity:0;visibility:hidden}
-.sp-logo{font-size:56px;margin-bottom:14px;animation:spB 1s ease-in-out infinite alternate}
-@keyframes spB{from{transform:translateY(0)}to{transform:translateY(-10px)}}
-.sp-title{font-size:22px;font-weight:700;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#6EE7B7,#818CF8,#6EE7B7);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:spG 3s linear infinite;}
-@keyframes spG{0%{background-position:0%}100%{background-position:200%}}
-.sp-msg{font-size:14px;color:rgba(255,255,255,.65);text-align:center;max-width:340px;line-height:1.6;padding:0 20px;}
-.sp-bar-w{width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:99px;margin-top:24px;overflow:hidden}
-.sp-bar{height:100%;background:linear-gradient(90deg,#6EE7B7,#818CF8);animation:spL 2.2s ease forwards}
-@keyframes spL{0%{width:0}100%{width:100%}}
-.sp-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:8px}
-.hdr{background:rgba(15,23,42,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(99,102,241,.3);padding:10px 14px;position:sticky;top:0;z-index:100;}
-.ht{background:linear-gradient(135deg,#818CF8,#0D9488,#6EE7B7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:15px;margin-bottom:2px;}
-.hs{color:var(--mut);font-size:11px;margin-bottom:7px}
-.tbar{display:flex;flex-wrap:wrap;gap:3px}
-.tb{background:transparent;border:1px solid transparent;color:var(--mut);padding:5px 11px;font-size:12px;border-radius:7px;cursor:pointer;font-family:inherit;transition:all .2s;}
-.tb:hover{background:rgba(255,255,255,.07);color:var(--txt)}.tb.act{background:linear-gradient(135deg,#6366F1,#0D9488);color:#fff;font-weight:500;}
+
+/* ── PROFILE SCREEN ──────────────────────────────── */
+#profileScreen{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0F172A 0%,#1E1B4B 40%,#0F2E2B 100%);overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:32px 16px;}
+#profileScreen.hide{display:none}
+.ps-logo{font-size:52px;margin-bottom:10px;animation:psB 1.2s ease-in-out infinite alternate}
+@keyframes psB{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.ps-title{font-size:24px;font-weight:700;background:linear-gradient(135deg,#6EE7B7,#818CF8,#6EE7B7);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:psG 3s linear infinite;margin-bottom:4px;text-align:center;}
+@keyframes psG{0%{background-position:0%}100%{background-position:200%}}
+.ps-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;text-align:center}
+.ps-section{width:100%;max-width:520px;margin-bottom:16px}
+.ps-section-title{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:2px}
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.ps-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;}
+.ps-btn:hover{background:rgba(255,255,255,.12);transform:translateY(-2px);border-color:rgba(255,255,255,.25)}
+.ps-btn .pb-icon{font-size:22px;margin-bottom:4px}
+.ps-btn .pb-name{font-size:12px;font-weight:600;color:var(--txt)}
+.ps-btn .pb-role{font-size:10px;color:var(--mut)}
+.ps-btn.pad{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
+.ps-btn.pad:hover{border-color:rgba(245,158,11,.7);background:rgba(245,158,11,.15)}
+.ps-btn.jefa{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1);max-width:520px;width:100%}
+.ps-btn.jefa:hover{border-color:rgba(139,92,246,.8);background:rgba(139,92,246,.2)}
+
+/* ── SALE OVERLAY ────────────────────────────────── */
 #saleOverlay{position:fixed;inset:0;z-index:8999;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.85);backdrop-filter:blur(8px)}
 #saleOverlay.show{display:flex}
 .so-burst{text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:28px 44px;animation:soIn .5s cubic-bezier(.175,.885,.32,1.275)}
 @keyframes soIn{0%{transform:scale(0);opacity:0}80%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
-.so-emoji{font-size:64px;display:block;margin-bottom:10px}
-.so-name{color:#fff;font-size:26px;font-weight:700;margin-bottom:4px}
-.so-detail{color:#A5F3FC;font-size:15px;margin-bottom:4px}
-.so-score{color:#6EE7B7;font-size:22px;font-weight:700;margin-bottom:14px}
+.so-emoji{font-size:60px;display:block;margin-bottom:10px}
+.so-name{color:#fff;font-size:24px;font-weight:700;margin-bottom:4px}
+.so-detail{color:#A5F3FC;font-size:14px;margin-bottom:4px}
+.so-score{color:#6EE7B7;font-size:20px;font-weight:700;margin-bottom:14px}
 .so-hint{color:rgba(255,255,255,.4);font-size:11px}
 .cf-wrap{position:fixed;inset:0;pointer-events:none;z-index:8998}
 .cf{position:absolute;border-radius:2px;animation:cfF linear forwards}
 @keyframes cfF{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
-#rnBox{position:fixed;top:88px;right:14px;z-index:6000;width:290px;pointer-events:none;}
-.rnC{background:rgba(10,15,30,.97);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateX(320px);transition:transform .45s cubic-bezier(.175,.885,.32,1.275),opacity .45s;}
-.rnC.show{transform:translateX(0)}.rnC.hide{transform:translateX(320px);opacity:0}
+
+/* ── RANK NOTIF ──────────────────────────────────── */
+#rnBox{position:fixed;top:70px;right:14px;z-index:6000;width:280px;pointer-events:none;}
+.rnC{background:rgba(10,15,30,.97);border-radius:12px;padding:11px 13px;margin-bottom:7px;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateX(310px);transition:transform .45s cubic-bezier(.175,.885,.32,1.275),opacity .45s;}
+.rnC.show{transform:translateX(0)}.rnC.hide{transform:translateX(310px);opacity:0}
 .rnLead{border-color:rgba(245,158,11,.7);background:linear-gradient(135deg,rgba(10,15,30,.97),rgba(120,53,15,.4))}
-.rnUp{border-color:rgba(16,185,129,.6);background:linear-gradient(135deg,rgba(10,15,30,.97),rgba(6,78,59,.4))}
-.rnIco{font-size:18px;margin-bottom:3px}.rnNm{font-size:12px;font-weight:700;color:#F1F5F9;margin-bottom:2px}.rnMsg{font-size:11px;color:#94A3B8;line-height:1.4}
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#065F46,#0D9488);color:#fff;padding:9px 18px;font-size:13px;font-weight:500;border-radius:99px;z-index:200;display:none;white-space:nowrap;max-width:90vw;}
+.rnIco{font-size:16px;margin-bottom:2px}.rnNm{font-size:11px;font-weight:700;color:#F1F5F9;margin-bottom:2px}.rnMsg{font-size:10px;color:#94A3B8;line-height:1.4}
+
+/* ── TOAST ───────────────────────────────────────── */
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#065F46,#0D9488);color:#fff;padding:8px 16px;font-size:12px;font-weight:500;border-radius:99px;z-index:200;display:none;white-space:nowrap;max-width:90vw;}
 .toast.on{display:block}
-.loading{padding:60px;text-align:center;color:var(--mut)}
-main{padding:14px}
-.tab{display:none}.tab.act{display:block}
+
+/* ── HEADER ──────────────────────────────────────── */
+.hdr{background:rgba(15,23,42,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(99,102,241,.3);padding:8px 14px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.hdr-left{flex:1}
+.ht{background:linear-gradient(135deg,#818CF8,#0D9488,#6EE7B7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:14px;}
+.hs{color:var(--mut);font-size:10px}
+.hdr-profile{display:flex;align-items:center;gap:8px}
+.prof-badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.prof-badge:hover{background:rgba(255,255,255,.14)}
+
+/* ── MAIN LAYOUT ─────────────────────────────────── */
+.layout{display:grid;grid-template-columns:340px 1fr;gap:14px;padding:14px;min-height:calc(100vh - 56px);}
+@media(max-width:768px){.layout{grid-template-columns:1fr;}}
+.panel{min-width:0}
+
+/* ── CARDS ───────────────────────────────────────── */
 .card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:12px;}
 .ct{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--txt)}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
-.col{flex:1;min-width:0}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cs{font-size:11px;color:var(--mut);margin-bottom:8px}
 .fl{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
 label{font-size:11px;color:var(--mut);font-weight:500}
 input,select{width:100%;padding:8px 10px;border:1px solid var(--brd);border-radius:7px;font-size:12px;font-family:inherit;background:rgba(255,255,255,.06);color:var(--txt);outline:none;transition:all .2s;}
-input:focus,select:focus{border-color:var(--pri);box-shadow:0 0 0 2px rgba(13,148,136,.12)}
+input:focus{border-color:var(--pri);box-shadow:0 0 0 2px rgba(13,148,136,.12)}
 input::placeholder{color:var(--mut)}
-select option{background:#1E293B;color:var(--txt)}
-select optgroup{color:#6EE7B7;font-style:normal;font-size:11px}
-.sbtn{width:100%;padding:10px;border:none;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;font-family:inherit;color:#fff;margin-top:4px;transition:all .2s;}
-.sbtn:hover{transform:translateY(-1px)}
-.msg{font-size:12px;font-weight:600;padding:8px 11px;border-radius:8px;margin-bottom:8px}
-.mok{background:rgba(16,185,129,.15);color:#6EE7B7;border:1px solid rgba(16,185,129,.3)}
-.merr{background:rgba(239,68,68,.15);color:#FCA5A5;border:1px solid rgba(239,68,68,.3)}
-.btn{padding:6px 11px;border:1px solid var(--brd);border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;background:rgba(255,255,255,.06);color:var(--txt);transition:all .2s;}
-.pod-wrap{display:flex;flex-direction:column;gap:10px}
-.pod-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--brd);background:rgba(255,255,255,.04);animation:piIn .4s ease both;}
-@keyframes piIn{from{transform:translateX(-20px);opacity:0}to{transform:translateX(0);opacity:1}}
-.pod-item.p1{background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(252,211,77,.08));border-color:rgba(245,158,11,.4)}
-.pod-item.p2{background:linear-gradient(135deg,rgba(148,163,184,.1),rgba(100,116,139,.05));border-color:rgba(148,163,184,.3)}
-.pod-item.p3{background:linear-gradient(135deg,rgba(217,119,6,.1),rgba(180,83,9,.05));border-color:rgba(217,119,6,.3)}
-.pod-medal{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+input[type=number]{font-size:28px;font-weight:700;text-align:center;padding:14px;color:#6EE7B7;}
+.sbtn{width:100%;padding:11px;border:none;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;font-family:inherit;color:#fff;margin-top:6px;transition:all .2s;}
+.sbtn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.sbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none}
+
+/* ── HOURLY TIMELINE ─────────────────────────────── */
+.hour-grid{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.hr-slot{flex:1;min-width:46px;text-align:center;padding:7px 4px;border-radius:8px;border:1px solid var(--brd);background:rgba(255,255,255,.04);font-size:10px;}
+.hr-slot.active{border-color:var(--pri);background:rgba(13,148,136,.15)}
+.hr-slot.filled{border-color:rgba(110,231,183,.4);background:rgba(16,185,129,.1)}
+.hr-slot.future{opacity:.35}
+.hr-time{font-weight:600;color:var(--mut);font-size:9px;margin-bottom:2px}
+.hr-val{font-size:13px;font-weight:700;color:#6EE7B7}
+.hr-val.empty{color:rgba(255,255,255,.2);font-size:11px}
+
+/* ── PROGRESS BAR ────────────────────────────────── */
+.prog-w{background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:6px 0}
+.prog-b{height:100%;border-radius:99px;transition:width .8s ease}
+
+/* ── PODIO ───────────────────────────────────────── */
+.pod-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--brd);background:rgba(255,255,255,.03);margin-bottom:8px;animation:piIn .3s ease both;}
+@keyframes piIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.pod-item.p1{background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(252,211,77,.06));border-color:rgba(245,158,11,.4)}
+.pod-item.p2{background:linear-gradient(135deg,rgba(148,163,184,.08),rgba(100,116,139,.04));border-color:rgba(148,163,184,.25)}
+.pod-item.p3{background:linear-gradient(135deg,rgba(217,119,6,.08),rgba(180,83,9,.04));border-color:rgba(217,119,6,.3)}
+.pod-medal{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
 .pm1{background:linear-gradient(135deg,#F59E0B,#FCD34D)}.pm2{background:linear-gradient(135deg,#9CA3AF,#D1D5DB)}.pm3{background:linear-gradient(135deg,#D97706,#F59E0B)}
-.pod-name{flex:1;font-size:13px;font-weight:700;color:var(--txt)}
-.pod-score{font-size:22px;font-weight:700;background:linear-gradient(135deg,#6EE7B7,#818CF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.pod-bar-w{height:4px;background:rgba(255,255,255,.1);border-radius:99px;margin-top:4px;overflow:hidden}
-.pod-bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--acc));transition:width 1s ease}
-.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.team-card{background:var(--card);border:1px solid var(--brd);border-radius:14px;padding:14px;transition:transform .2s;}
-.team-card:hover{transform:translateY(-2px)}
-.team-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--brd)}
-.team-nm{font-size:14px;font-weight:700}.team-tot{font-size:11px;font-weight:600;color:#6EE7B7;background:rgba(16,185,129,.15);padding:2px 8px;border-radius:99px;border:1px solid rgba(16,185,129,.3)}
-.mbr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.mbr-nm{font-size:11px;font-weight:600;color:var(--txt);width:68px;flex-shrink:0}
-.mbr-bar-w{flex:1;height:16px;background:rgba(255,255,255,.08);border-radius:99px;position:relative;overflow:hidden}
-.mbr-bar{height:100%;border-radius:99px;transition:width .8s ease}
-.mbr-pct{font-size:9px;font-weight:600;position:absolute;right:5px;top:50%;transform:translateY(-50%);color:#fff}
-.mbr-num{font-size:10px;color:var(--mut);width:52px;text-align:right;flex-shrink:0}
-.team-prog-w{height:5px;background:rgba(255,255,255,.08);border-radius:99px;margin-top:8px;overflow:hidden}
-.team-prog{height:100%;border-radius:99px;transition:width .8s ease}
+.pod-pct{font-size:20px;font-weight:700;background:linear-gradient(135deg,#6EE7B7,#818CF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ── TABLE ───────────────────────────────────────── */
 .tbl-w{overflow-x:auto}
 table{border-collapse:collapse;width:100%}
 th,td{border:1px solid rgba(255,255,255,.07);padding:4px 6px;text-align:center;font-size:10px;white-space:nowrap}
-th{background:rgba(255,255,255,.05);font-weight:600;color:var(--mut)}
 .th-d{background:rgba(15,23,42,.9);color:#94A3B8;font-weight:600}
 td.td-l{text-align:left;padding-left:8px}
+.tdc{outline:2px solid var(--pri);outline-offset:-1px}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:99px}
 </style>
 </head>
 <body>
-<div id="saleOverlay" onclick="this.classList.remove('show')">
-  <div class="cf-wrap" id="cfWrap"></div>
-  <div class="so-burst">
-    <span class="so-emoji" id="soEmoji">🎯</span>
-    <div class="so-name" id="soName"></div>
-    <div class="so-detail" id="soDetail"></div>
-    <div class="so-score" id="soScore"></div>
-    <div class="so-hint">Toca para continuar</div>
-  </div>
-</div>
-<div id="rnBox"></div>
-<div id="splash">
-  <div class="sp-logo">🏆</div>
-  <div class="sp-title">Concurso Mayo 2026</div>
-  <div class="sp-msg" id="spMsg"></div>
-  <div class="sp-bar-w"><div class="sp-bar"></div></div>
-  <div class="sp-sub">WOM Colombia · El mejor equipo gana</div>
-</div>
-<div class="hdr">
-  <div class="ht">CONCURSO MAYO 2026 &nbsp;|&nbsp; WOM Colombia</div>
-  <div class="hs">5 equipos &nbsp;·&nbsp; Premio $1.000.000 &nbsp;·&nbsp; Conv. mín 72% &nbsp;·&nbsp; Sin alertas malas prácticas</div>
-  <div class="tbar">
-    <button class="tb act" onclick="showTab('reg')">Registrar</button>
-    <button class="tb" onclick="showTab('podio')">Podio</button>
-    <button class="tb" onclick="showTab('equipos')">Equipos</button>
-    <button class="tb" onclick="showTab('tabla')">Tabla</button>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-<div id="app-loading" class="loading">
-  <div style="font-size:32px;margin-bottom:12px">🏆</div>
-  <div style="color:#6EE7B7;font-weight:600;font-size:14px;margin-bottom:5px">Cargando concurso...</div>
-</div>
-<div id="app-main" style="display:none"><main>
 
-<div id="tab-reg" class="tab act">
-<div class="row">
-<div class="col" style="max-width:420px"><div class="card">
-  <div class="ct">📝 Registrar ventas del día</div>
-  <div class="fg">
-    <div class="fl"><label>Asesor</label><select id="rAdv"></select></div>
-    <div class="fl"><label>Día de mayo</label><select id="rDay"></select></div>
-  </div>
-  <div class="fl"><label>Cantidad de ventas cantadas</label>
-    <input type="number" id="rVentas" min="0" step="0.5" placeholder="Ej: 5"></div>
-  <div id="rMsg"></div>
-  <button class="sbtn" style="background:linear-gradient(135deg,#0D9488,#6366F1)" onclick="submitReg()">Registrar</button>
-</div></div>
-<div class="col"><div class="card">
-  <div class="ct">Últimos registros (<span id="regCount">0</span>)</div>
-  <div id="recentRegs"></div>
-</div></div>
-</div></div>
+<!-- PROFILE SELECTION SCREEN -->
+<div id="profileScreen">
+  <div class="ps-logo">🏆</div>
+  <div class="ps-title">Concurso Mayo 2026</div>
+  <div class="ps-sub">WOM Colombia · Selecciona tu perfil para continuar</div>
+  <div id="psContent"></div>
+</div>
 
-<div id="tab-podio" class="tab">
-<div class="row" style="margin-bottom:14px">
-  <div class="col"><div class="card">
-    <div class="ct">🏆 Podio de equipos</div>
-    <div class="pod-wrap" id="podioMain"></div>
-  </div></div>
-  <div class="col" style="max-width:290px"><div class="card">
-    <div class="ct">🎁 Premio</div>
-    <div style="font-size:22px;font-weight:700;color:#FCD34D;margin-bottom:10px">$1.000.000</div>
-    <div style="font-size:12px;color:var(--mut);line-height:1.9">
-      <div>👑 Padrino: <b style="color:#6EE7B7">$500.000</b></div>
-      <div>👥 Cada ahijado: <b style="color:#818CF8">$250.000</b></div>
-      <div style="margin-top:10px;font-size:11px;padding:8px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid var(--brd)">
-        <b style="color:#FCA5A5">Condiciones:</b><br>
-        ✅ 100% meta cantadas acumulada<br>
-        ✅ Conversión mínima 72%<br>
-        🚫 Sin alertas malas prácticas
+<!-- MAIN APP -->
+<div id="app" style="display:none">
+  <div id="saleOverlay" onclick="this.classList.remove('show')">
+    <div class="cf-wrap" id="cfWrap"></div>
+    <div class="so-burst">
+      <span class="so-emoji" id="soEmoji">🎯</span>
+      <div class="so-name" id="soName"></div>
+      <div class="so-detail" id="soDetail"></div>
+      <div class="so-score" id="soScore"></div>
+      <div class="so-hint">Toca para continuar</div>
+    </div>
+  </div>
+  <div id="rnBox"></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="ht">CONCURSO MAYO 2026 &nbsp;|&nbsp; WOM Colombia</div>
+      <div class="hs" id="hdrSub"></div>
+    </div>
+    <div class="hdr-profile">
+      <div class="prof-badge" id="profBadge" onclick="switchProfile()"></div>
+    </div>
+  </div>
+
+  <div class="layout" id="mainLayout">
+    <!-- PANEL IZQUIERDO: MI PROGRESO (solo participantes) -->
+    <div class="panel" id="panelLeft">
+      <!-- Progreso personal -->
+      <div class="card" id="myProgress">
+        <div class="ct" id="myProgTitle">Mi progreso hoy</div>
+        <div id="myProgContent"></div>
+      </div>
+      <!-- Check-in horario -->
+      <div class="card" id="checkinCard">
+        <div class="ct">⏰ Check-in de ventas</div>
+        <div class="cs" id="checkinSub">Reporta cuántas ventas llevas en total hoy</div>
+        <div id="slotStatus"></div>
+        <div class="fl">
+          <label>¿Cuántas ventas llevas hoy en total?</label>
+          <input type="number" id="ventasInput" min="0" step="1" placeholder="0">
+        </div>
+        <div id="checkinMsg"></div>
+        <button class="sbtn" id="checkinBtn" style="background:linear-gradient(135deg,#0D9488,#6366F1)" onclick="submitCheckin()">Actualizar mis ventas</button>
+        <!-- Timeline horario -->
+        <div style="margin-top:12px">
+          <div style="font-size:10px;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Historial de hoy</div>
+          <div class="hour-grid" id="hourGrid"></div>
+        </div>
       </div>
     </div>
-  </div></div>
-</div>
-<div class="card"><div class="ct">📊 Marcador por día</div><div class="tbl-w" id="marcador"></div></div>
-</div>
 
-<div id="tab-equipos" class="tab">
-  <div class="team-grid" id="teamGrid"></div>
-</div>
+    <!-- PANEL DERECHO: RANKING Y RESULTADOS -->
+    <div class="panel" id="panelRight">
+      <!-- KPIs -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px" id="kpis"></div>
 
-<div id="tab-tabla" class="tab">
-<div class="card">
-  <div class="ct">📋 Historial de registros</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-    <select id="tfAdv" style="flex:1;min-width:120px" onchange="renderTabla()"><option value="">Todos</option></select>
-    <select id="tfDay" style="flex:1;min-width:100px" onchange="renderTabla()"><option value="">Todos los días</option></select>
-    <button class="btn" onclick="clearTF()">Limpiar</button>
+      <!-- Podio diario -->
+      <div class="card">
+        <div class="ct">🏆 Ranking del día — % de meta diaria alcanzada</div>
+        <div id="podioDia"></div>
+      </div>
+
+      <!-- Podio general -->
+      <div class="card">
+        <div class="ct">📊 Ranking general — % de meta del mes alcanzada</div>
+        <div id="podioGen"></div>
+      </div>
+
+      <!-- Marcador tabla -->
+      <div class="card">
+        <div class="ct">📋 Marcador por día</div>
+        <div class="tbl-w" id="marcador"></div>
+      </div>
+    </div>
   </div>
-  <div class="tbl-w"><table><thead><tr>
-    <th class="th-d">May</th><th class="th-d">Asesor</th>
-    <th class="th-d">Equipo</th><th class="th-d">Ventas</th>
-    <th class="th-d">Hora</th><th class="th-d"></th>
-  </tr></thead><tbody id="tablaBody"></tbody></table></div>
-  <div id="tablaCount" style="font-size:11px;color:var(--mut);margin-top:8px"></div>
-</div></div>
+</div>
 
-</main></div>
 <script>
-var firebaseConfig={
+var fbConfig={
   apiKey:"AIzaSyBgvDMkfiO64EqLZVy0ZySTtrECEhhaO3o",
   authDomain:"seguimiento-team-jarold.firebaseapp.com",
   databaseURL:"https://seguimiento-team-jarold-default-rtdb.firebaseio.com",
@@ -213,59 +218,48 @@ var firebaseConfig={
   appId:"1:795965579723:web:ec961c938c1c8e0984964e"
 };
 
-// ── DATOS DEL CONCURSO ────────────────────────────────────────────
-// Cada equipo: padrino primero, luego ahijados
-// meta = ventas cantadas objetivo del concurso
-var TEAMS = [
-  {id:"leidy",   nombre:"Equipo Leidy",   color:"#F59E0B",
-   members:[{nombre:"Leidy",metaDia:100},{nombre:"Edwim",metaDia:47},{nombre:"Carlos",metaDia:34}]},
-  {id:"carmen",  nombre:"Equipo Carmen",  color:"#6366F1",
-   members:[{nombre:"Carmen",metaDia:78},{nombre:"Pedro",metaDia:46},{nombre:"Jhon",metaDia:33}]},
-  {id:"camilo",  nombre:"Equipo Camilo",  color:"#0D9488",
-   members:[{nombre:"Camilo",metaDia:77},{nombre:"Jaime",metaDia:44},{nombre:"Luis",metaDia:34}]},
+// ── DATOS ─────────────────────────────────────────────────────────
+var TEAMS=[
+  {id:"leidy",  nombre:"Equipo Leidy",  color:"#F59E0B",
+   members:[{nombre:"Leidy",metaDia:100,esPad:true},{nombre:"Edwim",metaDia:47},{nombre:"Carlos",metaDia:34}]},
+  {id:"carmen", nombre:"Equipo Carmen", color:"#6366F1",
+   members:[{nombre:"Carmen",metaDia:78,esPad:true},{nombre:"Pedro",metaDia:46},{nombre:"Jhon",metaDia:33}]},
+  {id:"camilo", nombre:"Equipo Camilo", color:"#0D9488",
+   members:[{nombre:"Camilo",metaDia:77,esPad:true},{nombre:"Jaime",metaDia:44},{nombre:"Luis",metaDia:34}]},
   {id:"yorgelis",nombre:"Equipo Yorgelis",color:"#EC4899",
-   members:[{nombre:"Yorgelis",metaDia:0},{nombre:"Rene",metaDia:68},{nombre:"Diana",metaDia:34}]},
-  {id:"ernesto", nombre:"Equipo Ernesto", color:"#8B5CF6",
-   members:[{nombre:"Ernesto",metaDia:0},{nombre:"Jarol",metaDia:68},{nombre:"Laurys",metaDia:37}]},
+   members:[{nombre:"Yorgelis",metaDia:0,esPad:true},{nombre:"Rene",metaDia:68},{nombre:"Diana",metaDia:34}]},
+  {id:"ernesto",nombre:"Equipo Ernesto",color:"#8B5CF6",
+   members:[{nombre:"Ernesto",metaDia:0,esPad:true},{nombre:"Jarol",metaDia:68},{nombre:"Laurys",metaDia:37}]},
 ];
 
-// Calcular teamMeta = suma de metas individuales
-TEAMS.forEach(function(t){
-  t.metaDiaTotal = t.members.reduce(function(s,m){return s+m.metaDia;},0);
-});
+// All participants + supervisor
+var ALL_MEMBERS=[];
+TEAMS.forEach(function(t){t.members.forEach(function(m){ALL_MEMBERS.push(Object.assign({},m,{teamId:t.id,teamNombre:t.nombre,teamColor:t.color}));});});
 
-// Días hábiles del concurso: desde hoy 12 mayo
+// Working days May 12-30
 var WD=[12,13,14,15,16,19,20,21,22,23,25,26,27,28,29,30];
 var SAT=new Set([16,23,30]);
 var DN=["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
 function dow(d){return(5+d-1)%7;}
+var HOURS=[10,11,12,13,14,15,16,17,18]; // check-in hours
 var today=(function(){var n=new Date();return n.getFullYear()===2026&&n.getMonth()===4?n.getDate():12;})();
+var nowHour=(function(){var n=new Date();return n.getHours();})();
 
+// ── META HELPERS ──────────────────────────────────────────────────
+function metaForDay(md,d){return SAT.has(d)?md*0.5:md;}
+function metaMes(md){return WD.reduce(function(s,d){return s+metaForDay(md,d);},0);}
+function teamMetaHoy(t){return t.members.reduce(function(s,m){return s+metaForDay(m.metaDia,today);},0);}
+function teamMetaMes(t){return t.members.reduce(function(s,m){return s+metaMes(m.metaDia);},0);}
 
-// Meta de un miembro para un dia especifico (sabado = mitad)
-function metaForDay(metaDia, day){
-  return SAT.has(day) ? metaDia * 0.5 : metaDia;
-}
-// META GENERAL del mes completo (12 al 30) — FIJA, no cambia con la fecha
-function metaMes(metaDia){
-  return WD.reduce(function(s,d){return s+metaForDay(metaDia,d);},0);
-}
-// Meta general del equipo (suma de todos los miembros, todos los dias)
-function teamMetaMes(team){
-  return team.members.reduce(function(s,m){return s+metaMes(m.metaDia);},0);
-}
-// Meta del equipo para el dia de HOY unicamente
-function teamMetaHoy(team){
-  return team.members.reduce(function(s,m){return s+metaForDay(m.metaDia,today);},0);
-}
+// ── DATABASE ──────────────────────────────────────────────────────
+// Structure: ventas/{nombre}/{day} = total for that day (latest value)
+//            historial/{nombre}/{day}/{hour} = value at that hour
+var db={ventas:{},historial:{}};
+var dbRef;
+var currentProfile=null; // {nombre, teamId, teamNombre, teamColor, esPad, isJefa}
+var prevDayLeader="",prevGenLeader="";
 
-var MSGS=["El mejor equipo no es el mas talentoso. Es el mas unido.","Hoy es el dia para demostrar de que estas hecho. Cada venta cuenta.","La diferencia entre ganar y perder esta en lo que haces cuando nadie te mira.","Los campeones no nacen. Se hacen en dias exactamente como hoy.","Un millon de razones para dar el maximo hoy."];
-
-var db={sales:{}};
-var dbRef, currentTab="reg", lastN=0, firstLoad=true;
-var prevLeader="";
-
-// ── VOZ ───────────────────────────────────────────────────────────
+// ── VOICE ─────────────────────────────────────────────────────────
 function speak(msg){
   try{
     window.speechSynthesis.cancel();
@@ -277,456 +271,377 @@ function speak(msg){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-
-function speakDelay(msg){
-  if(window.speechSynthesis.speaking){
-    setTimeout(function(){
-      var u=new SpeechSynthesisUtterance(msg);
-      u.lang="es-CO";u.rate=0.88;u.pitch=1.05;u.volume=0.92;
-      var vs=window.speechSynthesis.getVoices();
-      var v=vs.find(function(x){return x.lang.startsWith("es");});
-      if(v)u.voice=v;
-      window.speechSynthesis.speak(u);
-    },1800);
-  } else {
-    speak(msg);
-  }
+function speakLater(msg){
+  setTimeout(function(){
+    if(window.speechSynthesis.speaking){setTimeout(function(){speak(msg);},1800);}
+    else{speak(msg);}
+  },500);
 }
 
 // ── RANK NOTIF ────────────────────────────────────────────────────
-function rnShow(cls,icon,name,msg,voice){
-  var box=document.getElementById("rnBox");
-  if(!box)return;
+function rnShow(icon,name,msg,voice){
+  var box=document.getElementById("rnBox");if(!box)return;
   var div=document.createElement("div");
-  div.className="rnC "+cls;
+  div.className="rnC rnLead";
   div.innerHTML='<div class="rnIco">'+icon+'</div><div class="rnNm">'+name+'</div><div class="rnMsg">'+msg+'</div>';
   box.appendChild(div);
   setTimeout(function(){div.classList.add("show");},30);
-  setTimeout(function(){div.classList.add("hide");setTimeout(function(){div.remove();},500);},4500);
-  if(voice)setTimeout(function(){speakDelay(voice);},500);
-}
-
-// ── CHECK RANK ────────────────────────────────────────────────────
-function checkRanks(){
-  try{
-    var totals=getTeamTotals();
-    var sorted=TEAMS.slice().sort(function(a,b){return totals[b.id]-totals[a.id];});
-    var newLeader=sorted[0].nombre;
-    if(prevLeader && newLeader!==prevLeader){
-      rnShow("rnLead","🏆",newLeader,
-        "Nuevo lider del concurso. Todo el equipo lo sintio.",
-        "Atencion a todos! "+newLeader+" acaba de tomar el liderazgo del concurso. Eso es trabajo en equipo!");
-    }
-    prevLeader=newLeader;
-  }catch(e){console.error("checkRanks:",e);}
+  setTimeout(function(){div.classList.add("hide");setTimeout(function(){div.remove();},500);},5000);
+  if(voice)speakLater(voice);
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────
 function fCOP(n){return "$"+Math.round(n).toLocaleString("es-CO");}
-function ts2t(ts){if(!ts)return"";var d=new Date(ts);return d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");}
-function getSales(){if(!db.sales)return[];return Object.keys(db.sales).map(function(k){var s=Object.assign({},db.sales[k]);s._id=k;return s;});}
 function showToast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on");},5000);}
-function showMsg(id,txt,ok){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div class="msg '+(ok?"mok":"merr")+'">'+txt+'</div>';setTimeout(function(){if(el)el.innerHTML="";},3000);}
+function showMsg(id,txt,ok){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div style="padding:8px 10px;border-radius:7px;font-size:12px;font-weight:600;background:'+(ok?"rgba(16,185,129,.15)":"rgba(239,68,68,.15)")+';color:'+(ok?"#6EE7B7":"#FCA5A5")+';border:1px solid '+(ok?"rgba(16,185,129,.3)":"rgba(239,68,68,.3)")+';margin-bottom:8px">'+txt+'</div>';setTimeout(function(){if(el)el.innerHTML="";},3000);}
 
-function getTeamMemberTotals(){
-  var mt={};
-  TEAMS.forEach(function(t){t.members.forEach(function(m){mt[m.nombre]=0;});});
-  getSales().forEach(function(s){if(mt[s.a]!==undefined)mt[s.a]+=s.v;});
-  return mt;
-}
-
-function getTeamTotals(){
-  var mt=getTeamMemberTotals();
-  var tt={};
-  TEAMS.forEach(function(t){
-    tt[t.id]=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-  });
-  return tt;
-}
-
-function findMember(nombre){
-  for(var i=0;i<TEAMS.length;i++){
-    for(var j=0;j<TEAMS[i].members.length;j++){
-      if(TEAMS[i].members[j].nombre===nombre)return{member:TEAMS[i].members[j],team:TEAMS[i],isPad:j===0};
-    }
+// Get total for a member on a day
+// Priority: ventas_dia (check-in) > sales (old format sum)
+function getMemberDay(nombre,day){
+  if(db.ventas&&db.ventas[nombre]&&db.ventas[nombre][day]!==undefined){
+    return db.ventas[nombre][day];
   }
+  // Fall back to summing old sales entries
+  if(!db.sales)return 0;
+  return Object.values(db.sales).filter(function(s){
+    return s.a===nombre&&s.d===day;
+  }).reduce(function(sum,s){return sum+(s.v||0);},0);
+}
+
+// Get team total for a day
+function getTeamDay(team,day){
+  return team.members.reduce(function(s,m){return s+getMemberDay(m.nombre,day);},0);
+}
+
+// Get team total for all days
+function getTeamTotal(team){
+  return WD.reduce(function(s,d){return s+getTeamDay(team,d);},0);
+}
+
+// Get today's hour history for a member
+function getMemberHistory(nombre){
+  if(!db.historial||!db.historial[nombre]||!db.historial[nombre][today])return {};
+  return db.historial[nombre][today];
+}
+
+// ── FIREBASE ──────────────────────────────────────────────────────
+function saveVenta(nombre,day,total){
+  dbRef.child("ventas_dia/"+nombre+"/"+day).set(total);
+}
+function saveHistorial(nombre,day,hour,total){
+  dbRef.child("historial/"+nombre+"/"+day+"/"+hour).set(total);
+}
+
+// ── CHECK-IN ──────────────────────────────────────────────────────
+function getCurrentSlot(){
+  // Available slots: hours in HOURS array, from 10 to 18
+  if(nowHour>=10&&nowHour<=18)return nowHour;
   return null;
 }
 
-// ── ANIMACION VENTA ───────────────────────────────────────────────
-function showSaleAnim(s){
-  var info=findMember(s.a);
-  var teamNombre=info?info.team.nombre:"";
-  document.getElementById("soName").textContent=s.a;
-  document.getElementById("soDetail").textContent=teamNombre+" · May "+s.d;
-  document.getElementById("soScore").textContent=s.v+" ventas registradas";
+function submitCheckin(){
+  if(!currentProfile||currentProfile.isJefa)return;
+  var val=parseFloat(document.getElementById("ventasInput").value);
+  if(isNaN(val)||val<0){showMsg("checkinMsg","Ingresa un número válido",false);return;}
+  var slot=getCurrentSlot();
+  if(!slot){showMsg("checkinMsg","Fuera del horario de check-in (10am-6pm)",false);return;}
+  var nombre=currentProfile.nombre;
+  // SET (replace) the value for today
+  saveVenta(nombre,today,val);
+  saveHistorial(nombre,today,slot,val);
+  showMsg("checkinMsg","Actualizado a "+val+" ventas",true);
+  document.getElementById("ventasInput").value="";
+  // Animation
+  showSaleAnim(nombre,val,currentProfile.teamNombre,currentProfile.teamColor);
+}
+
+// ── ANIMATION ─────────────────────────────────────────────────────
+function showSaleAnim(nombre,val,teamNombre,teamColor){
+  document.getElementById("soName").textContent=nombre;
+  document.getElementById("soDetail").textContent=teamNombre+" · May "+today;
+  document.getElementById("soScore").textContent=val+" ventas reportadas hoy";
   document.getElementById("soEmoji").textContent="🎯";
   document.getElementById("saleOverlay").classList.add("show");
   var c=document.getElementById("cfWrap");c.innerHTML="";
   var cols=["#0D9488","#F59E0B","#EF4444","#818CF8","#10B981","#3B82F6","#EC4899","#6EE7B7"];
-  for(var i=0;i<80;i++){
-    var d=document.createElement("div");d.className="cf";
-    var sz=5+Math.random()*8;
-    d.style.cssText="left:"+Math.random()*100+"%;top:-10px;background:"+cols[i%cols.length]+";width:"+sz+"px;height:"+sz+"px;border-radius:"+(Math.random()>.5?"50%":"3px")+";animation:cfF "+(1.5+Math.random()*2)+"s "+(Math.random()*.5)+"s linear forwards;";
-    c.appendChild(d);
-  }
-  setTimeout(function(){document.getElementById("saleOverlay").classList.remove("show");},5000);
-  var tNombre=teamNombre.replace("Equipo ","");
-  setTimeout(function(){speak(s.a.split(" ")[0]+" del equipo "+tNombre+" registro "+s.v+" ventas. Felicitaciones!");},600);
+  for(var i=0;i<70;i++){var d=document.createElement("div");d.className="cf";var sz=5+Math.random()*8;d.style.cssText="left:"+Math.random()*100+"%;top:-10px;background:"+cols[i%cols.length]+";width:"+sz+"px;height:"+sz+"px;border-radius:"+(Math.random()>.5?"50%":"3px")+";animation:cfF "+(1.5+Math.random()*2)+"s "+(Math.random()*.5)+"s linear forwards;";c.appendChild(d);}
+  setTimeout(function(){document.getElementById("saleOverlay").classList.remove("show");},4500);
+  setTimeout(function(){speak(nombre.split(" ")[0]+" actualizo sus ventas. Lleva "+val+" ventas hoy. Sigue adelante!");},600);
 }
 
-// ── FIREBASE ──────────────────────────────────────────────────────
-function fbPush(path,data){dbRef.child(path).push(data);}
-function fbRemove(path){dbRef.child(path).remove();}
-
-// ── REGISTRAR ─────────────────────────────────────────────────────
-function submitReg(){
-  var adv=document.getElementById("rAdv").value;
-  var day=parseInt(document.getElementById("rDay").value);
-  var v=parseFloat(document.getElementById("rVentas").value);
-  if(!adv||!day||!v||v<=0){showMsg("rMsg","Completa todos los campos",false);return;}
-  var sale={a:adv,d:day,v:v,ts:new Date().toISOString()};
-  fbPush("sales",sale);
-  showSaleAnim(sale);
-  showMsg("rMsg","Ventas registradas!",true);
-  document.getElementById("rVentas").value="";
-  document.getElementById("rDay").value="";
+// ── CHECK RANK CHANGES ────────────────────────────────────────────
+function checkRanks(){
+  try{
+    // Daily ranking
+    var dayData=TEAMS.map(function(t){var r=getTeamDay(t,today),m=teamMetaHoy(t);return{t:t,pct:m>0?(r/m)*100:0};}).sort(function(a,b){return b.pct-a.pct;});
+    var newDayLead=dayData[0].t.nombre;
+    if(prevDayLeader&&newDayLead!==prevDayLeader){
+      rnShow("🏆",newDayLead,"Nuevo lider del dia!","Atencion! "+newDayLead+" lidera el ranking del dia con el mayor porcentaje. Asi se gana!");
+    }
+    prevDayLeader=newDayLead;
+    // General ranking
+    var genData=TEAMS.map(function(t){var r=getTeamTotal(t),m=teamMetaMes(t);return{t:t,pct:m>0?(r/m)*100:0};}).sort(function(a,b){return b.pct-a.pct;});
+    var newGenLead=genData[0].t.nombre;
+    if(prevGenLeader&&newGenLead!==prevGenLeader){
+      rnShow("📊",newGenLead,"Nuevo lider general!","Atencion equipo! "+newGenLead+" toma el liderazgo general del concurso. El premio esta en juego!");
+    }
+    prevGenLeader=newGenLead;
+  }catch(e){console.error("checkRanks:",e);}
 }
-function delReg(id){if(!confirm("Eliminar?"))return;fbRemove("sales/"+id);}
 
 // ── RENDER ────────────────────────────────────────────────────────
 function renderAll(){
-  renderRecent();
-  if(currentTab==="podio")renderPodio();
-  if(currentTab==="equipos")renderEquipos();
-  if(currentTab==="tabla")renderTabla();
+  renderKPIs();
+  renderPodioDia();
+  renderPodioGen();
+  renderMarcador();
+  if(currentProfile&&!currentProfile.isJefa)renderMyProgress();
+  renderHourGrid();
 }
 
-function renderRecent(){
-  var sales=getSales().sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
-  document.getElementById("regCount").textContent=sales.length;
-  var el=document.getElementById("recentRegs");
-  el.innerHTML="";
-  if(!sales.length){
-    el.innerHTML='<div style="color:var(--mut);font-size:12px">Sin registros aun</div>';
-    return;
-  }
-  sales.slice(0,8).forEach(function(s){
-    var info=findMember(s.a);
-    var tColor=info?info.team.color:"#0D9488";
-    var tNombre=info?info.team.nombre:"";
-    var wrap=document.createElement("div");
-    wrap.style.cssText="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--brd);font-size:11px;gap:6px";
-    var left=document.createElement("div");
-    left.innerHTML='<b style="color:var(--txt)">'+s.a+'</b>'
-      +'<span style="color:'+tColor+';font-size:10px"> · '+tNombre+'</span><br>'
-      +'<span style="color:#6EE7B7;font-weight:600">'+s.v+' ventas</span>'
-      +' <span style="color:var(--mut)">May '+s.d+' · '+ts2t(s.ts)+'</span>';
-    var btn=document.createElement("button");
-    btn.textContent="x";
-    btn.style.cssText="border:none;background:none;color:#EF4444;cursor:pointer;font-size:16px;padding:0;line-height:1;flex-shrink:0";
-    btn.title="Eliminar registro";
-    (function(id){
-      btn.addEventListener("click",function(){
-        if(confirm("Eliminar este registro?")) dbRef.child("sales/"+id).remove();
-      });
-    })(s._id);
-    wrap.appendChild(left);
-    wrap.appendChild(btn);
-    el.appendChild(wrap);
-  });
+function renderKPIs(){
+  var totalHoy=TEAMS.reduce(function(s,t){return s+getTeamDay(t,today);},0);
+  var metaHoyTotal=TEAMS.reduce(function(s,t){return s+teamMetaHoy(t);},0);
+  var totalGen=TEAMS.reduce(function(s,t){return s+getTeamTotal(t);},0);
+  var pctHoy=metaHoyTotal>0?((totalHoy/metaHoyTotal)*100).toFixed(0):"0";
+  document.getElementById("kpis").innerHTML=
+    '<div style="background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:10px 12px;border-left:3px solid #F59E0B"><div style="font-size:9px;color:var(--mut);text-transform:uppercase;margin-bottom:3px">Ventas hoy</div><div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#F59E0B,#FCD34D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+totalHoy.toFixed(1)+'</div></div>'
+   +'<div style="background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:10px 12px;border-left:3px solid #6EE7B7"><div style="font-size:9px;color:var(--mut);text-transform:uppercase;margin-bottom:3px">% meta hoy</div><div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#6EE7B7,#0D9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+pctHoy+'%</div></div>'
+   +'<div style="background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:10px 12px;border-left:3px solid #818CF8"><div style="font-size:9px;color:var(--mut);text-transform:uppercase;margin-bottom:3px">Total acum.</div><div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#818CF8,#6366F1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+totalGen.toFixed(1)+'</div></div>';
 }
 
-function renderPodio(){
-  var mt=getTeamMemberTotals();
-  var salesArr=getSales();
-
-  // Para cada equipo: real total, meta acumulada, real hoy, meta hoy
-  var data=TEAMS.map(function(t){
-    var realTotal=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-    var metaAcumTeam=teamMetaMes(t);
-    var metaHoyTeam=teamMetaHoy(t);
-    var realHoy=t.members.reduce(function(s,m){
-      return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
-               .reduce(function(ss,x){return ss+x.v;},0);
-    },0);
-    var pctTotal=metaAcumTeam>0?Math.min((realTotal/metaAcumTeam)*100,100):0;
-    var pctHoy=metaHoyTeam>0?Math.min((realHoy/metaHoyTeam)*100,100):0;
-    return {t:t,realTotal:realTotal,metaAcumTeam:metaAcumTeam,
-            metaHoyTeam:metaHoyTeam,realHoy:realHoy,
-            pctTotal:pctTotal,pctHoy:pctHoy};
-  });
-
-  // Ordenar por % general
-  data.sort(function(a,b){return b.pctTotal-a.pctTotal;});
-
+function renderPodio(containerId,data,isDay){
+  var el=document.getElementById(containerId);
   var mc=["pm1","pm2","pm3"],em=["🥇","🥈","🥉"];
-  document.getElementById("podioMain").innerHTML=data.map(function(d,i){
-    var t=d.t;
-    var cls=i<3?("pod-item p"+(i+1)):"pod-item";
-    var medal=i<3
-      ?'<div class="pod-medal '+mc[i]+'">'+em[i]+'</div>'
-      :'<div class="pod-medal" style="background:rgba(255,255,255,.08);font-size:12px;color:var(--mut)">'+(i+1)+'</div>';
-
-    var colorH=d.pctHoy>=100?"#6EE7B7":d.pctHoy>=70?"#FCD34D":"#FCA5A5";
-    var colorT=d.pctTotal>=100?"#6EE7B7":d.pctTotal>=70?"#FCD34D":"#FCA5A5";
-
-    return '<div class="'+cls+'" style="animation-delay:'+(i*.08)+'s">'
+  el.innerHTML=data.map(function(d,i){
+    var t=d.t,pct=d.pct;
+    var colorPct=pct>=100?"#6EE7B7":pct>=70?"#FCD34D":"#FCA5A5";
+    var cls=i<3?"pod-item p"+(i+1):"pod-item";
+    var medal=i<3?'<div class="pod-medal '+mc[i]+'">'+em[i]+'</div>'
+      :'<div class="pod-medal" style="background:rgba(255,255,255,.07);font-size:11px;color:var(--mut)">'+(i+1)+'</div>';
+    return '<div class="'+cls+'" style="animation-delay:'+(i*.06)+'s">'
       +medal
       +'<div style="flex:1">'
-        +'<div class="pod-name" style="color:'+t.color+'">'+t.nombre+'</div>'
-        // Barra diaria
-        +'<div style="font-size:9px;color:var(--mut);margin:5px 0 2px;text-transform:uppercase;letter-spacing:.4px">📅 Hoy</div>'
-        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
-          +'<div style="flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
-            +'<div style="width:'+d.pctHoy+'%;height:100%;background:'+colorH+';border-radius:99px;transition:width .8s ease"></div>'
-          +'</div>'
-          +'<span style="font-size:11px;font-weight:700;color:'+colorH+';white-space:nowrap">'+d.realHoy.toFixed(1)+' / '+d.metaHoyTeam.toFixed(1)+'</span>'
-          +'<span style="font-size:10px;color:'+colorH+';font-weight:600">'+d.pctHoy.toFixed(0)+'%</span>'
+        +'<div style="font-size:13px;font-weight:700;color:'+t.color+'">'+t.nombre+'</div>'
+        +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;margin-top:4px;overflow:hidden">'
+          +'<div style="width:'+Math.min(pct,100)+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
         +'</div>'
-        // Barra general
-        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">📊 General acumulado</div>'
-        +'<div style="display:flex;align-items:center;gap:8px">'
-          +'<div style="flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
-            +'<div style="width:'+d.pctTotal+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
-          +'</div>'
-          +'<span style="font-size:11px;font-weight:700;color:var(--txt);white-space:nowrap">'+d.realTotal.toFixed(1)+' / '+d.metaAcumTeam.toFixed(1)+'</span>'
-          +'<span style="font-size:10px;color:'+colorT+';font-weight:600">'+d.pctTotal.toFixed(0)+'%</span>'
+        +'<div style="font-size:10px;color:var(--mut);margin-top:2px">'
+          +d.real.toFixed(1)+' / '+d.meta.toFixed(1)+' cantadas'
         +'</div>'
       +'</div>'
+      +'<div class="pod-pct">'+pct.toFixed(0)+'%</div>'
     +'</div>';
   }).join("");
+}
 
-  // Marcador diario
-  var h='<table><thead><tr><th class="th-d" style="text-align:left;min-width:120px">Equipo</th>';
-  WD.forEach(function(day){
-    h+='<th class="th-d'+(day===today?' tdc':'')+'" style="min-width:34px">'
-      +'<div>'+day+'</div><div style="font-size:9px;color:var(--mut)">'+DN[dow(day)]+(SAT.has(day)?' 4h':'')+'</div></th>';
-  });
-  h+='<th class="th-d">Real</th><th class="th-d">Meta</th><th class="th-d">%</th></tr></thead><tbody>';
-  data.forEach(function(d,i){
-    var dm={};WD.forEach(function(day){dm[day]=0;});
-    salesArr.forEach(function(s){
-      var info=findMember(s.a);
-      if(info&&info.team.id===d.t.id&&dm[s.d]!==undefined)dm[s.d]+=s.v;
-    });
-    var colorT=d.pctTotal>=100?"#6EE7B7":d.pctTotal>=70?"#FCD34D":"#FCA5A5";
-    h+='<tr style="background:'+(i%2===0?"rgba(255,255,255,.03)":"rgba(255,255,255,.01)")
-      +'"><td class="td-l" style="font-weight:600;font-size:10px">'
-      +'<span style="display:inline-block;width:8px;height:8px;background:'+d.t.color+';border-radius:50%;margin-right:5px"></span>'
-      +d.t.nombre+'</td>';
-    WD.forEach(function(day){
-      var v=dm[day];
-      h+='<td style="color:'+(v>0?"#6EE7B7":"rgba(255,255,255,.15)")+';font-weight:'+(v>0?"600":"400")+'">'+(v>0?v.toFixed(1):"")+'</td>';
-    });
-    h+='<td style="color:#6EE7B7;font-weight:700">'+d.realTotal.toFixed(1)+'</td>'
-      +'<td style="color:var(--mut)">'+d.metaAcumTeam.toFixed(1)+'</td>'
-      +'<td style="color:'+colorT+';font-weight:600">'+d.pctTotal.toFixed(0)+'%</td></tr>';
+function renderPodioDia(){
+  var data=TEAMS.map(function(t){
+    var real=getTeamDay(t,today),meta=teamMetaHoy(t);
+    return{t:t,real:real,meta:meta,pct:meta>0?(real/meta)*100:0};
+  }).sort(function(a,b){return b.pct-a.pct;});
+  renderPodio("podioDia",data,true);
+}
+
+function renderPodioGen(){
+  var data=TEAMS.map(function(t){
+    var real=getTeamTotal(t),meta=teamMetaMes(t);
+    return{t:t,real:real,meta:meta,pct:meta>0?(real/meta)*100:0};
+  }).sort(function(a,b){return b.pct-a.pct;});
+  renderPodio("podioGen",data,false);
+}
+
+function renderMarcador(){
+  var h='<table><thead><tr><th class="th-d" style="text-align:left;min-width:110px">Equipo</th>';
+  WD.forEach(function(d){h+='<th class="th-d'+(d===today?' tdc':'')+'" style="min-width:30px"><div>'+d+'</div><div style="font-size:8px;color:var(--mut)">'+DN[dow(d)]+(SAT.has(d)?' S':'')+'</div></th>';});
+  h+='<th class="th-d">Real</th><th class="th-d">Meta mes</th><th class="th-d">%</th></tr></thead><tbody>';
+  var genData=TEAMS.map(function(t){var r=getTeamTotal(t),m=teamMetaMes(t);return{t:t,r:r,m:m,pct:m>0?(r/m)*100:0};}).sort(function(a,b){return b.pct-a.pct;});
+  genData.forEach(function(d,i){
+    var pct=d.pct;
+    var colorPct=pct>=100?"#6EE7B7":pct>=70?"#FCD34D":"#FCA5A5";
+    h+='<tr style="background:'+(i%2===0?"rgba(255,255,255,.03)":"rgba(255,255,255,.01)")+'">'
+      +'<td class="td-l" style="font-weight:600;font-size:10px"><span style="display:inline-block;width:7px;height:7px;background:'+d.t.color+';border-radius:50%;margin-right:4px"></span>'+d.t.nombre+'</td>';
+    WD.forEach(function(day){var v=getTeamDay(d.t,day);h+='<td style="color:'+(v>0?"#6EE7B7":"rgba(255,255,255,.15)")+'">'+(v>0?v.toFixed(1):"")+'</td>';});
+    h+='<td style="color:#6EE7B7;font-weight:700">'+d.r.toFixed(1)+'</td>'
+      +'<td style="color:var(--mut)">'+d.m.toFixed(1)+'</td>'
+      +'<td style="color:'+colorPct+';font-weight:600">'+pct.toFixed(0)+'%</td></tr>';
   });
   document.getElementById("marcador").innerHTML=h+'</tbody></table>';
 }
 
-function renderEquipos(){
-  var mt=getTeamMemberTotals();
-  var salesArr=getSales();
-  document.getElementById("teamGrid").innerHTML=TEAMS.map(function(t){
-    var teamRealT=t.members.reduce(function(s,m){return s+(mt[m.nombre]||0);},0);
-    var teamMetaA=teamMetaMes(t);
-    var teamMetaH=teamMetaHoy(t);
-    var teamRealH=t.members.reduce(function(s,m){
-      return s+salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
-               .reduce(function(ss,x){return ss+x.v;},0);
-    },0);
-    var teamPctT=teamMetaA>0?Math.min((teamRealT/teamMetaA)*100,100):0;
-    var teamPctH=teamMetaH>0?Math.min((teamRealH/teamMetaH)*100,100):0;
-    var colorH=teamPctH>=100?"#6EE7B7":teamPctH>=70?"#FCD34D":"#FCA5A5";
-    var colorT=teamPctT>=100?"#6EE7B7":teamPctT>=70?"#FCD34D":"#FCA5A5";
+function renderMyProgress(){
+  if(!currentProfile||currentProfile.isJefa)return;
+  var nombre=currentProfile.nombre;
+  var teamId=currentProfile.teamId;
+  var team=TEAMS.find(function(t){return t.id===teamId;});
+  var m=ALL_MEMBERS.find(function(x){return x.nombre===nombre;});
+  if(!team||!m)return;
+  var realHoy=getMemberDay(nombre,today);
+  var metaHoy=metaForDay(m.metaDia,today);
+  var pctHoy=metaHoy>0?(realHoy/metaHoy)*100:0;
+  var realTotal=WD.reduce(function(s,d){return s+getMemberDay(nombre,d);},0);
+  var metaTotal=metaMes(m.metaDia);
+  var pctTotal=metaTotal>0?(realTotal/metaTotal)*100:0;
+  var cH=pctHoy>=100?"#6EE7B7":pctHoy>=70?"#FCD34D":"#FCA5A5";
+  var cT=pctTotal>=100?"#6EE7B7":pctTotal>=70?"#FCD34D":"#FCA5A5";
+  // Team progress today
+  var teamRealH=getTeamDay(team,today);
+  var teamMetaH=teamMetaHoy(team);
+  var teamPctH=teamMetaH>0?(teamRealH/teamMetaH)*100:0;
+  document.getElementById("myProgContent").innerHTML=
+    '<div style="text-align:center;margin-bottom:12px">'
+      +'<div style="font-size:32px;font-weight:700;color:'+cH+'">'+realHoy.toFixed(0)+'</div>'
+      +'<div style="font-size:11px;color:var(--mut)">de '+metaHoy+' meta hoy</div>'
+    +'</div>'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">📅 HOY — '+pctHoy.toFixed(0)+'%</div>'
+    +'<div class="prog-w" style="height:8px;margin-bottom:10px"><div class="prog-b" style="width:'+Math.min(pctHoy,100)+'%;height:8px;background:'+cH+'"></div></div>'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">📊 META MES — '+pctTotal.toFixed(0)+'%</div>'
+    +'<div class="prog-w" style="height:8px;margin-bottom:10px"><div class="prog-b" style="width:'+Math.min(pctTotal,100)+'%;height:8px;background:'+currentProfile.teamColor+'"></div></div>'
+    +'<div style="border-top:1px solid var(--brd);padding-top:10px;margin-top:4px">'
+      +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">🤝 '+team.nombre+' hoy — '+teamPctH.toFixed(0)+'%</div>'
+      +'<div class="prog-w" style="height:6px"><div class="prog-b" style="width:'+Math.min(teamPctH,100)+'%;height:6px;background:'+currentProfile.teamColor+'"></div></div>'
+      +'<div style="font-size:10px;color:var(--mut);margin-top:3px">'+teamRealH.toFixed(1)+' / '+teamMetaH.toFixed(1)+' ventas equipo</div>'
+    +'</div>';
+}
 
-    var mbars=t.members.map(function(m,mi){
-      var realT=mt[m.nombre]||0;
-      var realH=salesArr.filter(function(x){return x.a===m.nombre&&x.d===today;})
-                 .reduce(function(ss,x){return ss+x.v;},0);
-      var mHoy=metaForDay(m.metaDia,today);
-      var mAcum=metaMes(m.metaDia);
-      var pctH=mHoy>0?Math.min((realH/mHoy)*100,100):0;
-      var pctT=mAcum>0?Math.min((realT/mAcum)*100,100):0;
-      var isPad=mi===0;
-      var cH=pctH>=100?"#6EE7B7":pctH>=70?"#FCD34D":"#FCA5A5";
-      var cT=pctT>=100?"#6EE7B7":pctT>=70?"#FCD34D":"#FCA5A5";
-      return '<div class="mbr">'
-        +'<div class="mbr-nm" style="color:'+(isPad?t.color:"var(--txt)")+';font-weight:'+(isPad?"700":"600")+'">'+(isPad?"👑 ":"")+m.nombre+'</div>'
-        +'<div style="flex:1;padding:0 4px">'
-          // Hoy
-          +(m.metaDia>0?
-            '<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">'
-              +'<span style="font-size:8px;color:var(--mut);width:28px">HOY</span>'
-              +'<div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
-                +'<div style="width:'+pctH+'%;height:100%;background:'+cH+';border-radius:99px"></div>'
-              +'</div>'
-              +'<span style="font-size:9px;color:'+cH+';width:55px;text-align:right;font-weight:600">'+realH.toFixed(1)+'/'+mHoy.toFixed(1)+'</span>'
-            +'</div>'
-            // General
-            +'<div style="display:flex;align-items:center;gap:4px">'
-              +'<span style="font-size:8px;color:var(--mut);width:28px">TOTAL</span>'
-              +'<div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
-                +'<div style="width:'+pctT+'%;height:100%;background:'+(isPad?t.color:"#6366F1")+';border-radius:99px"></div>'
-              +'</div>'
-              +'<span style="font-size:9px;color:'+cT+';width:55px;text-align:right;font-weight:600">'+realT.toFixed(1)+'/'+mAcum.toFixed(1)+'</span>'
-            +'</div>'
-          :"<span style=\"font-size:10px;color:var(--mut)\">Padrino — sin meta individual</span>")
-        +'</div>'
-      +'</div>';
-    }).join("");
-
-    return '<div class="team-card">'
-      +'<div class="team-hdr"><div class="team-nm" style="color:'+t.color+'">'+t.nombre+'</div>'
-      +'<div style="text-align:right;font-size:10px">'
-        +'<div style="color:'+colorH+';font-weight:600">HOY '+teamRealH.toFixed(1)+'/'+teamMetaH.toFixed(1)+'</div>'
-        +'<div style="color:'+colorT+';font-weight:600">GEN '+teamPctT.toFixed(0)+'%</div>'
-      +'</div></div>'
-      +mbars
-      +'<div style="margin-top:8px">'
-        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px">📅 HOY: '+teamPctH.toFixed(0)+'%</div>'
-        +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:4px">'
-          +'<div style="width:'+teamPctH+'%;height:100%;background:'+colorH+';border-radius:99px;transition:width .8s ease"></div>'
-        +'</div>'
-        +'<div style="font-size:9px;color:var(--mut);margin-bottom:2px">📊 GENERAL: '+teamPctT.toFixed(0)+'%</div>'
-        +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">'
-          +'<div style="width:'+teamPctT+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
-        +'</div>'
-      +'</div>'
+function renderHourGrid(){
+  if(!currentProfile||currentProfile.isJefa)return;
+  var hist=getMemberHistory(currentProfile.nombre);
+  var slot=getCurrentSlot();
+  document.getElementById("hourGrid").innerHTML=HOURS.map(function(h){
+    var val=hist[h];
+    var hasFilled=val!==undefined&&val!==null;
+    var isActive=h===slot;
+    var isFuture=h>nowHour;
+    var cls="hr-slot"+(isActive?" active":hasFilled?" filled":isFuture?" future":"");
+    return '<div class="'+cls+'">'
+      +'<div class="hr-time">'+(h<=12?h+"am":(h-12)+"pm")+'</div>'
+      +'<div class="hr-val'+(hasFilled?"":" empty")+'">'+(hasFilled?val:"·")+'</div>'
     +'</div>';
   }).join("");
 }
 
-function renderTabla(){
-  var fa=document.getElementById("tfAdv").value||"";
-  var fd=document.getElementById("tfDay").value||"";
-  var sales=getSales().sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
-  if(fa)sales=sales.filter(function(s){return s.a===fa;});
-  if(fd)sales=sales.filter(function(s){return s.d==fd;});
-  var bg0="rgba(255,255,255,.04)",bg1="rgba(255,255,255,.02)";
-  var tbody=document.getElementById("tablaBody");
-  tbody.innerHTML="";
-  sales.forEach(function(s,i){
-    var info=findMember(s.a);
-    var tc=info?info.team.color:"#0D9488";
-    var tn=info?info.team.nombre:"";
-    var tr=document.createElement("tr");
-    tr.style.background=i%2===0?bg0:bg1;
-    tr.innerHTML='<td>'+s.d+'</td><td class="td-l" style="color:var(--txt)">'+s.a+'</td><td class="td-l" style="color:'+tc+';font-size:10px">'+tn+'</td><td style="color:#6EE7B7;font-weight:700">'+s.v+'</td><td style="color:var(--mut)">'+ts2t(s.ts)+'</td><td></td>';
-    var btn=document.createElement("button");
-    btn.textContent="×";
-    btn.style.cssText="border:none;background:none;color:var(--dan);cursor:pointer;font-size:14px;padding:0";
-    btn.title="Eliminar";
-    btn.addEventListener("click",function(){if(confirm("Eliminar este registro?"))fbRemove("sales/"+s._id);});
-    tr.cells[tr.cells.length-1].appendChild(btn);
-    tbody.appendChild(tr);
-  });
-  document.getElementById("tablaCount").textContent=sales.length+" registro(s)";
-}
-function clearTF(){document.getElementById("tfAdv").value="";document.getElementById("tfDay").value="";renderTabla();}
-
-// ── SELECTORES ────────────────────────────────────────────────────
-function initSelectors(){
-  // Dropdown principal: agrupado por equipo con optgroup
-  var rAdv=document.getElementById("rAdv");
-  rAdv.innerHTML='<option value="">-- Selecciona asesor --</option>';
+// ── PROFILE SCREEN ────────────────────────────────────────────────
+function buildProfileScreen(){
+  var el=document.getElementById("psContent");
+  var html="";
   TEAMS.forEach(function(t){
-    var grp=document.createElement("optgroup");
-    grp.label=t.nombre;
-    t.members.forEach(function(m,mi){
-      var opt=document.createElement("option");
-      opt.value=m.nombre;
-      opt.textContent=(mi===0?"👑 ":"")+m.nombre+(m.meta>0?" (meta: "+m.meta+")":"");
-      grp.appendChild(opt);
-    });
-    rAdv.appendChild(grp);
-  });
-
-  // Dropdown días
-  var dayH='<option value="">-- Día --</option>';
-  WD.forEach(function(d){dayH+='<option value="'+d+'">'+(d<10?"0"+d:d)+' May — '+DN[dow(d)]+(SAT.has(d)?" 4h":"")+(d===today?" HOY":"")+'</option>';});
-  document.getElementById("rDay").innerHTML=dayH;
-
-  // Filtros tabla
-  var tfAdv=document.getElementById("tfAdv");
-  tfAdv.innerHTML='<option value="">Todos</option>';
-  TEAMS.forEach(function(t){
-    var grp=document.createElement("optgroup");
-    grp.label=t.nombre;
+    html+='<div class="ps-section">'
+      +'<div class="ps-section-title" style="color:'+t.color+'">'+t.nombre+'</div>'
+      +'<div class="ps-grid">';
     t.members.forEach(function(m){
-      var opt=document.createElement("option");
-      opt.value=m.nombre;opt.textContent=m.nombre;
-      grp.appendChild(opt);
+      html+='<button class="ps-btn'+(m.esPad?" pad":"")+'" onclick="selectProfile(\''+m.nombre+'\',\''+t.id+'\')">'
+        +'<div class="pb-icon">'+(m.esPad?"👑":"👤")+'</div>'
+        +'<div class="pb-name">'+m.nombre+'</div>'
+        +'<div class="pb-role">'+(m.esPad?"Padrino":"Ahijado")+(m.metaDia>0?" · meta "+m.metaDia:"")+'</div>'
+      +'</button>';
     });
-    tfAdv.appendChild(grp);
+    html+='</div></div>';
   });
-
-  var tfDay=document.getElementById("tfDay");
-  var dH='<option value="">Todos los días</option>';
-  WD.forEach(function(d){dH+='<option value="'+d+'">'+(d<10?"0"+d:d)+' May</option>';});
-  tfDay.innerHTML=dH;
-  document.getElementById("tfDay").addEventListener("change",renderTabla);
+  // Supervisor
+  html+='<div class="ps-section" style="max-width:520px;width:100%">'
+    +'<div class="ps-section-title">Supervisión</div>'
+    +'<button class="ps-btn jefa" onclick="selectProfile(\'Jefa Yeimi\',null)">'
+      +'<div class="pb-icon">👁️</div>'
+      +'<div class="pb-name">Jefa Yeimi</div>'
+      +'<div class="pb-role">Solo visualización — ver todos los equipos</div>'
+    +'</button></div>';
+  el.innerHTML=html;
 }
 
-function showTab(name){
-  document.querySelectorAll(".tab").forEach(function(el){el.classList.remove("act");});
-  document.querySelectorAll(".tb").forEach(function(el){el.classList.remove("act");});
-  document.getElementById("tab-"+name).classList.add("act");
-  var tabs=["reg","podio","equipos","tabla"];
-  var idx=tabs.indexOf(name);
-  if(idx>=0&&document.querySelectorAll(".tb")[idx])document.querySelectorAll(".tb")[idx].classList.add("act");
-  currentTab=name;
-  if(name==="podio")renderPodio();
-  if(name==="equipos")renderEquipos();
-  if(name==="tabla")renderTabla();
+function selectProfile(nombre,teamId){
+  var info=null;
+  if(nombre==="Jefa Yeimi"){
+    info={nombre:"Jefa Yeimi",teamId:null,teamNombre:"Supervisión",teamColor:"#8B5CF6",esPad:false,isJefa:true};
+  } else {
+    info=ALL_MEMBERS.find(function(m){return m.nombre===nombre;});
+    if(info)info=Object.assign({},info,{isJefa:false});
+  }
+  if(!info)return;
+  currentProfile=info;
+  sessionStorage.setItem("concurso_profile",JSON.stringify(info));
+  applyProfile();
 }
 
-function initSplash(){
-  if(window.speechSynthesis)window.speechSynthesis.getVoices();
-  document.getElementById("spMsg").textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
-  setTimeout(function(){
-    document.getElementById("splash").classList.add("hide");
-    setTimeout(function(){var sp=document.getElementById("splash");if(sp)sp.remove();},900);
-  },2500);
+function applyProfile(){
+  if(!currentProfile)return;
+  // Hide profile screen
+  document.getElementById("profileScreen").classList.add("hide");
+  document.getElementById("app").style.display="block";
+  // Update header
+  var badge=document.getElementById("profBadge");
+  badge.textContent=(currentProfile.isJefa?"👁️ ":"👤 ")+currentProfile.nombre+" — Cambiar";
+  badge.style.borderColor=currentProfile.teamColor||"rgba(255,255,255,.15)";
+  document.getElementById("hdrSub").textContent=currentProfile.isJefa?"Modo supervisor — solo visualización":currentProfile.teamNombre+" · Meta hoy: "+metaForDay((ALL_MEMBERS.find(function(m){return m.nombre===currentProfile.nombre;})||{metaDia:0}).metaDia,today);
+  // Show/hide left panel
+  var leftPanel=document.getElementById("panelLeft");
+  if(currentProfile.isJefa){
+    leftPanel.style.display="none";
+    document.getElementById("mainLayout").style.gridTemplateColumns="1fr";
+  } else {
+    leftPanel.style.display="block";
+    document.getElementById("mainLayout").style.gridTemplateColumns="340px 1fr";
+  }
+  // Update checkin
+  updateCheckinStatus();
+  renderAll();
 }
 
-function showApp(){
-  document.getElementById("app-loading").style.display="none";
-  document.getElementById("app-main").style.display="block";
+function switchProfile(){
+  currentProfile=null;
+  sessionStorage.removeItem("concurso_profile");
+  document.getElementById("profileScreen").classList.remove("hide");
+  document.getElementById("app").style.display="none";
 }
 
+function updateCheckinStatus(){
+  if(!currentProfile||currentProfile.isJefa)return;
+  var slot=getCurrentSlot();
+  var el=document.getElementById("slotStatus");
+  if(slot){
+    var slotLabel=slot<=12?slot+"am":(slot-12)+"pm";
+    el.innerHTML='<div style="background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:8px;color:#6EE7B7">⏰ Slot activo: <b>'+slotLabel+'</b> — Ingresa tu total de ventas de hoy</div>';
+    document.getElementById("checkinBtn").disabled=false;
+  } else {
+    var msg=nowHour<10?"El check-in abre a las 10am":"El horario de check-in terminó (hasta 6pm)";
+    el.innerHTML='<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:8px;color:#FCA5A5">🔒 '+msg+'</div>';
+    document.getElementById("checkinBtn").disabled=true;
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
 function init(){
-  firebase.initializeApp(firebaseConfig);
+  buildProfileScreen();
+  // Check saved profile
+  try{
+    var saved=sessionStorage.getItem("concurso_profile");
+    if(saved){currentProfile=JSON.parse(saved);}
+  }catch(e){}
+
+  firebase.initializeApp(fbConfig);
   dbRef=firebase.database().ref("/concurso_mayo2026");
-  var timeout=setTimeout(function(){showApp();renderAll();},7000);
+  var timeout=setTimeout(function(){renderAll();},7000);
+  var firstLoad=true;
   dbRef.on("value",function(snap){
     clearTimeout(timeout);
     var nd=snap.val()||{};
-    var newSales=nd.sales||{};
-    var newN=Object.keys(newSales).length;
+    db={ventas:nd.ventas_dia||{},historial:nd.historial||{},sales:nd.sales||{}};
     if(!firstLoad){
-      if(newN>lastN){
-        var arr=Object.values(newSales).sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
-        if(arr[0])showSaleAnim(arr[0]);
-      }
-      lastN=newN;
-      db={sales:newSales};
-      showApp();renderAll();
-      setTimeout(function(){checkRanks();},800);
+      renderAll();
+      setTimeout(function(){checkRanks();},600);
     } else {
-      lastN=newN;firstLoad=false;
-      db={sales:newSales};
-      showApp();renderAll();
-      // Inicializar líder sin notificación
-      var tt=getTeamTotals();
-      var sorted=TEAMS.slice().sort(function(a,b){return tt[b.id]-tt[a.id];});
-      prevLeader=sorted[0].nombre;
+      firstLoad=false;
+      renderAll();
+      // Init leaders
+      var dd=TEAMS.map(function(t){var r=getTeamDay(t,today),m=teamMetaHoy(t);return{t:t,pct:m>0?(r/m)*100:0};}).sort(function(a,b){return b.pct-a.pct;});
+      prevDayLeader=dd[0].t.nombre;
+      var gd=TEAMS.map(function(t){var r=getTeamTotal(t),m=teamMetaMes(t);return{t:t,pct:m>0?(r/m)*100:0};}).sort(function(a,b){return b.pct-a.pct;});
+      prevGenLeader=gd[0].t.nombre;
     }
   });
-  initSelectors();
-  initSplash();
+
+  if(currentProfile){applyProfile();}
+  if(window.speechSynthesis)window.speechSynthesis.getVoices();
 }
 init();
 </script>
