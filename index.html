@@ -680,7 +680,8 @@ function errorDots(){
 function processPinComplete(){
   if(pinStep==="enter"){
     if(pinBuffer===getPin(pinTarget.nombre)){
-      closePinModal();selectProfile(pinTarget.nombre,pinTarget.teamId);
+      var _n=pinTarget.nombre,_t=pinTarget.teamId;
+      closePinModal();selectProfile(_n,_t);
     } else {
       document.getElementById("pinErr").textContent="PIN incorrecto";
       errorDots();
@@ -692,8 +693,9 @@ function processPinComplete(){
     document.getElementById("pinErr").textContent="";
   } else if(pinStep==="set2"){
     if(pinBuffer===pinNew1){
-      savePin(pinTarget.nombre,pinBuffer);
-      closePinModal();selectProfile(pinTarget.nombre,pinTarget.teamId);
+      var _n2=pinTarget.nombre,_t2=pinTarget.teamId;
+      savePin(_n2,pinBuffer);
+      closePinModal();selectProfile(_n2,_t2);
     } else {
       document.getElementById("pinErr").textContent="Los PINs no coinciden. Intenta de nuevo.";
       errorDots();
