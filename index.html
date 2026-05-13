@@ -147,6 +147,55 @@ th,td{border:1px solid rgba(255,255,255,.07);padding:4px 6px;text-align:center;f
 td.td-l{text-align:left;padding-left:8px}
 .tdc{outline:2px solid var(--pri);outline-offset:-1px}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:99px}
+
+/* ── LOGIN ANIMATION ─────────────────────────────── */
+#loginAnim{position:fixed;inset:0;z-index:10002;background:#0F172A;display:none;align-items:center;justify-content:center;flex-direction:column;}
+#loginAnim.show{display:flex}
+#loginAnim.fadeout{animation:loginFO .7s ease forwards}
+@keyframes loginFO{to{opacity:0;visibility:hidden}}
+.la-avatar{font-size:64px;animation:laB .6s ease-in-out infinite alternate;margin-bottom:12px}
+@keyframes laB{from{transform:scale(1)}to{transform:scale(1.08)}}
+.la-welcome{font-size:28px;font-weight:700;color:#fff;opacity:0;animation:laW .6s ease .3s forwards;text-align:center}
+@keyframes laW{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.la-name{font-size:36px;font-weight:900;opacity:0;animation:laW .6s ease .6s forwards;text-align:center;margin-top:4px}
+.la-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.la-p{position:absolute;border-radius:50%;animation:laP linear forwards}
+@keyframes laP{0%{transform:translateY(110vh) scale(0);opacity:0}20%{opacity:1}100%{transform:translateY(-20vh) scale(1);opacity:0}}
+
+/* ── PODIO ANIMATIONS ────────────────────────────── */
+.pod-item{transition:transform .2s,box-shadow .2s}
+.pod-item:hover{transform:translateX(4px);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.pod-item.p1{animation:piIn .4s ease both,glowPod 3s ease-in-out 1s infinite}
+@keyframes glowPod{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.0)}50%{box-shadow:0 0 16px 2px rgba(245,158,11,.25)}}
+.pod-pct{animation:countUp .8s ease}
+@keyframes countUp{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── FLOATING KPI CARDS ──────────────────────────── */
+#kpis > div{animation:kpiFloat ease-in-out infinite alternate}
+#kpis > div:nth-child(1){animation-duration:4s;animation-delay:0s}
+#kpis > div:nth-child(2){animation-duration:4.5s;animation-delay:.5s}
+#kpis > div:nth-child(3){animation-duration:5s;animation-delay:1s}
+@keyframes kpiFloat{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+
+/* ── PULSE DOT ───────────────────────────────────── */
+.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#EF4444;animation:liveDot 1.2s ease-in-out infinite;margin-right:5px;vertical-align:middle}
+@keyframes liveDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* ── ANIMATED BARS ───────────────────────────────── */
+.prog-b{animation:barGrow .9s cubic-bezier(.175,.885,.32,1.275) both}
+@keyframes barGrow{from{width:0!important}to{width:var(--w)}}
+
+/* ── BACKGROUND ORBS ─────────────────────────────── */
+.bg-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(60px);animation:orbFloat ease-in-out infinite alternate}
+@keyframes orbFloat{from{transform:translate(0,0) scale(1)}to{transform:translate(20px,15px) scale(1.1)}}
+
+/* ── HEADER SHIMMER ──────────────────────────────── */
+.ht{background-size:300%!important;animation:htShimmer 4s linear infinite}
+@keyframes htShimmer{0%{background-position:0%}100%{background-position:300%}}
+
+/* ── SCROLL COUNTER ──────────────────────────────── */
+.count-anim{transition:all .6s cubic-bezier(.175,.885,.32,1.275)}
+
 </style>
 </head>
 <body>
@@ -165,6 +214,13 @@ td.td-l{text-align:left;padding-left:8px}
 </div>
 
 <!-- PIN MODAL -->
+
+<div id="loginAnim">
+  <div class="la-particles" id="laParticles"></div>
+  <div class="la-avatar" id="laAvatar"></div>
+  <div class="la-welcome" id="laWelcome"></div>
+  <div class="la-name" id="laName" style="background:linear-gradient(135deg,#6EE7B7,#818CF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent"></div>
+</div>
 <div id="pinModal">
   <div class="pin-box">
     <div class="pin-avatar" id="pinAvatar"></div>
@@ -197,6 +253,8 @@ td.td-l{text-align:left;padding-left:8px}
   </div>
   <div id="rnBox"></div>
   <div class="toast" id="toast"></div>
+  <div class="bg-orb" style="width:400px;height:400px;background:rgba(99,102,241,.06);top:-100px;right:-100px;animation-duration:8s"></div>
+  <div class="bg-orb" style="width:300px;height:300px;background:rgba(13,148,136,.06);bottom:50px;left:-50px;animation-duration:11s;animation-delay:2s"></div>
 
   <div class="hdr">
     <div class="hdr-left">
@@ -242,13 +300,13 @@ td.td-l{text-align:left;padding-left:8px}
 
       <!-- Podio diario -->
       <div class="card">
-        <div class="ct">🏆 Ranking del día — % de meta diaria alcanzada</div>
+        <div class="ct"><span class="live-dot"></span>🏆 Ranking del día — % de meta diaria alcanzada</div>
         <div id="podioDia"></div>
       </div>
 
       <!-- Podio general -->
       <div class="card">
-        <div class="ct">📊 Ranking general — % de meta del mes alcanzada</div>
+        <div class="ct"><span class="live-dot"></span>📊 Ranking general — % de meta del mes alcanzada</div>
         <div id="podioGen"></div>
       </div>
 
@@ -478,7 +536,7 @@ function renderPodio(containerId,data,isDay){
       +'<div style="flex:1">'
         +'<div style="font-size:13px;font-weight:700;color:'+t.color+'">'+t.nombre+'</div>'
         +'<div style="height:5px;background:rgba(255,255,255,.08);border-radius:99px;margin-top:4px;overflow:hidden">'
-          +'<div style="width:'+Math.min(pct,100)+'%;height:100%;background:'+t.color+';border-radius:99px;transition:width .8s ease"></div>'
+          +'<div style="--w:'+Math.min(pct,100)+'%;width:'+Math.min(pct,100)+'%;height:100%;background:'+t.color+';border-radius:99px"></div>'
         +'</div>'
         +'<div style="font-size:10px;color:var(--mut);margin-top:2px">'
           +d.real.toFixed(1)+' / '+d.meta.toFixed(1)+' cantadas'
@@ -706,6 +764,96 @@ function processPinComplete(){
 }
 
 
+
+var GENDER={
+  "Leidy":"f","Edwim":"m","Carlos":"m","Carmen":"f","Pedro":"m","Jhon":"m",
+  "Camilo":"m","Jaime":"m","Luis":"m","Yorgelis":"f","Rene":"m","Diana":"f",
+  "Ernesto":"m","Jarol":"m","Laurys":"f","Jefa Yeimi":"f"
+};
+function esGenero(nombre){return GENDER[nombre]||"m";}
+
+// Netflix-like ta-dum sound
+function playNetflixSound(){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    function note(freq,start,dur,vol){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type="sine";o.frequency.setValueAtTime(freq,ctx.currentTime+start);
+      g.gain.setValueAtTime(0,ctx.currentTime+start);
+      g.gain.linearRampToValueAtTime(vol,ctx.currentTime+start+.05);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start);o.stop(ctx.currentTime+start+dur+.1);
+    }
+    // Bass ta-dum (two notes like Netflix)
+    note(55,0,.8,.18);   // low bass
+    note(110,0,.8,.12);  // octave
+    note(73.4,.55,.9,.2); // second note (higher)
+    note(146.8,.55,.9,.14);
+    // High shimmer
+    note(440,.6,.5,.04);
+    note(554,.65,.4,.03);
+  }catch(e){}
+}
+
+// Human welcome voice
+function speakWelcome(nombre){
+  try{
+    var gen=esGenero(nombre);
+    var greet=gen==="f"?"Bienvenida de vuelta":"Bienvenido de vuelta";
+    var msgs=[
+      greet+", "+nombre+". El equipo te estaba esperando.",
+      greet+", "+nombre+". Listo para dar el maximo hoy?",
+      greet+", "+nombre+". Hoy es un buen dia para liderar.",
+      greet+", "+nombre+". El concurso sigue en marcha.",
+    ];
+    var msg=msgs[Math.floor(Math.random()*msgs.length)];
+    setTimeout(function(){
+      window.speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(msg);
+      // More human settings
+      u.lang="es-CO";u.rate=0.82;u.pitch=gen==="f"?1.18:0.95;u.volume=0.88;
+      var vs=window.speechSynthesis.getVoices();
+      // Try to find a Google voice (more human)
+      var v=vs.find(function(x){return x.lang==="es-CO"&&x.name.toLowerCase().includes("google");})
+         ||vs.find(function(x){return x.lang==="es-US"&&x.name.toLowerCase().includes("google");})
+         ||vs.find(function(x){return x.lang.startsWith("es")&&x.name.toLowerCase().includes("google");})
+         ||vs.find(function(x){return x.lang.startsWith("es");});
+      if(v)u.voice=v;
+      window.speechSynthesis.speak(u);
+    },800);
+  }catch(e){}
+}
+
+// Login animation
+function showLoginAnim(nombre,color,onDone){
+  var el=document.getElementById("loginAnim");
+  var gen=esGenero(nombre);
+  document.getElementById("laAvatar").textContent=gen==="f"?"🌟":"⚡";
+  document.getElementById("laWelcome").textContent=gen==="f"?"¡Bienvenida de vuelta!":"¡Bienvenido de vuelta!";
+  document.getElementById("laName").textContent=nombre;
+  document.getElementById("laName").style.color=color||"#6EE7B7";
+  document.getElementById("laName").style.webkitTextFillColor="transparent";
+  // Particles
+  var pc=document.getElementById("laParticles");pc.innerHTML="";
+  var cols=["#0D9488","#6366F1","#F59E0B","#EC4899","#6EE7B7","#818CF8"];
+  for(var i=0;i<18;i++){
+    var p=document.createElement("div");p.className="la-p";
+    var sz=8+Math.random()*12;
+    p.style.cssText="width:"+sz+"px;height:"+sz+"px;background:"+cols[i%cols.length]+";left:"+Math.random()*100+"%;"
+      +"animation-duration:"+(2+Math.random()*2)+"s;animation-delay:"+Math.random()*1+"s;opacity:.7";
+    pc.appendChild(p);
+  }
+  el.classList.add("show");
+  el.classList.remove("fadeout");
+  playNetflixSound();
+  speakWelcome(nombre);
+  setTimeout(function(){
+    el.classList.add("fadeout");
+    setTimeout(function(){el.classList.remove("show","fadeout");if(onDone)onDone();},750);
+  },2400);
+}
+
 function selectProfile(nombre,teamId){
   var info=null;
   if(nombre==="Jefa Yeimi"){
@@ -717,7 +865,9 @@ function selectProfile(nombre,teamId){
   if(!info)return;
   currentProfile=info;
   sessionStorage.setItem("concurso_profile",JSON.stringify(info));
-  applyProfile();
+  // Show login animation then apply profile
+  var color=info.teamColor||"#6EE7B7";
+  showLoginAnim(nombre,color,function(){applyProfile();});
 }
 
 function applyProfile(){
